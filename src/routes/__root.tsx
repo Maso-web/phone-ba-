@@ -384,22 +384,58 @@ function SiteFooter() {
         <nav aria-label="Servisi i oprema">
           <h3 className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-slate-500">
             Servisi
-            <span className="pill pill-amber !px-1.5 !py-0 text-[9px]">
-              uskoro
-            </span>
           </h3>
           <ul className="mt-3 space-y-2 text-[13.5px]">
-            {[
-              "Servisi i oprema (imenik)",
-              "Sarajevo",
-              "Banja Luka",
-              "Mostar",
-              "Tuzla · Zenica",
-            ].map((c) => (
-              <li key={c} className="cursor-default text-slate-600">
-                {c}
-              </li>
-            ))}
+            <li>
+              <Link to="/servisi" search={{}} className="footer-link">
+                Servisi i oprema (imenik)
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/servisi"
+                search={{ grad: "sarajevo" }}
+                className="footer-link"
+              >
+                Sarajevo
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/servisi"
+                search={{ grad: "banja_luka" }}
+                className="footer-link"
+              >
+                Banja Luka
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/servisi"
+                search={{ grad: "mostar" }}
+                className="footer-link"
+              >
+                Mostar
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/servisi"
+                search={{ grad: "tuzla" }}
+                className="footer-link"
+              >
+                Tuzla
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/servisi"
+                search={{ grad: "zenica" }}
+                className="footer-link"
+              >
+                Zenica
+              </Link>
+            </li>
           </ul>
         </nav>
 
@@ -423,8 +459,8 @@ function SiteFooter() {
 
       <div className="border-t border-white/[0.05]">
         <div className="container-site flex flex-col items-center justify-between gap-2 py-5 text-[12px] text-slate-600 sm:flex-row">
-          <p>© 2025 phone.ba — Sva prava zadržana.</p>
-          <p>Napravljeno u Bosni i Hercegovini 🇧🇦</p>
+          <p>© 2026 phone.ba — Sva prava zadržana.</p>
+          <p>Developed in Bosnia and Herzegovina 🇧🇦</p>
         </div>
       </div>
     </footer>
