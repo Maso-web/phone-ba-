@@ -67,6 +67,15 @@ function RootDocument({ children }: { children: ReactNode }) {
   return (
     <html lang="bs">
       <head>
+        {/* Google tag (gtag.js) */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-LN99B689HL"></script>
+        <script>
+          {`window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', 'G-LN99B689HL');`}
+        </script>
         <HeadContent />
       </head>
       <body>
