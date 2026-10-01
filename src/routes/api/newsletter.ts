@@ -8,7 +8,8 @@ import { missingSmtpEnv, sendEmail } from "~/lib/email";
  * Uspjeh:  200 { ok: true }  (pretplatnik dobija potvrdu s hello@phone.ba)
  * Greška:  400 { ok: false, error: "…" }  — neispravan email/JSON
  *          503 { ok: false, error: "SMTP nije konfigurisan" } — nema SMTP env
- *          502 { ok: false, error: "…" }  — SMTP je konfigurisan, ali slanje nije prošlo
+ *          502 { ok: false, error: "…", detail: "…" } — SMTP je konfigurisan, ali slanje
+ *              nije prošlo; `detail` nosi tehnički opis greške (SMTP kod), BEZ kredencijala
  *
  * Napomena: za sada NEMA pohrane pretplatnika (send-only plumbing) — email se
  * samo šalje; lista se kasnije povezuje na bazu.
@@ -16,6 +17,33 @@ import { missingSmtpEnv, sendEmail } from "~/lib/email";
 
 /** Jednostavna validacija oblika email adrese (dovoljna za ovu namjenu). */
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[A-Za-z]{2,}$/;
+
+/** Ukloni vrijednost SMTP lozinke ako se (neočekivano) nađe u tekstu greške. */
+function redact(text: string): string {
+  const secret = process.env.SMTP_PASS?.trim();
+  return secret && secret.length >= 3
+    ? text.split(secret).join("[redacted]")
+    : text;
+}
+
+/**
+ * Tehnički opis greške za dijagnostiku (nodemailer obično nosi SMTP kod:
+ * ECONNREFUSED / ETIMEDOUT / ENOTFOUND / EAUTH "535 Authentication failed"…).
+ * Nikad ne uključuje kredencijale; dužina je ograničena.
+ */
+function errorDetail(err: unknown): string {
+  let detail: string;
+  if (err instanceof Error) {
+    const code = (err as { code?: unknown }).code;
+    detail =
+      typeof code === "string" && code !== "" && !err.message.includes(code)
+        ? `${err.message} (code=${code})`
+        : err.message;
+  } else {
+    detail = String(err);
+  }
+  return redact(detail).slice(0, 400);
+}
 
 function json(body: unknown, status: number): Response {
   return new Response(JSON.stringify(body), {
@@ -70,7 +98,9 @@ export const Route = createFileRoute("/api/newsletter")({
           return json({ ok: false, error: "Email adresa nije ispravna." }, 400);
         }
         const displayName =
-          typeof name === "string" && name.trim() !== "" ? name.trim() : undefined;
+          typeof name === "string" && name.trim() !== ""
+            ? name.trim()
+            : undefined;
 
         // Bez SMTP kredencijala ne rušimo rutu — vraćamo uredan 503.
         if (missingSmtpEnv().length > 0) {
@@ -83,12 +113,18 @@ export const Route = createFileRoute("/api/newsletter")({
             subject: "Potvrda prijave na phone.ba newsletter",
             html: confirmationHtml(displayName),
           });
-        } catch (error) {
-          const message = error instanceof Error ? error.message : String(error);
-          console.error("[newsletter] slanje potvrde nije uspjelo:", message);
+        } catch (err) {
+          const detail = errorDetail(err);
+          console.error("[newsletter] SMTP send failed:", err);
+          console.error("[newsletter] SMTP send detail:", detail);
           return json(
-            { ok: false, error: "Slanje potvrde trenutno nije moguće. Pokušaj ponovo kasnije." },
-            502
+            {
+              ok: false,
+              error:
+                "Slanje potvrde trenutno nije moguće. Pokušaj ponovo kasnije.",
+              detail,
+            },
+            502,
           );
         }
 
