@@ -7,6 +7,7 @@ import {
   sortPhones,
 } from "~/lib/catalog";
 import { PhoneVisual } from "./PhoneVisual";
+import { track } from "~/lib/analytics";
 
 /**
  * Velika AI pretraga iz hero sekcije.
@@ -28,6 +29,12 @@ export function SearchBox({ className = "" }: { className?: string }) {
   const goToCatalog = (q: string) => {
     setOpen(false);
     const trimmed = q.trim();
+    /* Poslovni događaj: korisnik je pokrenuo pretragu (hero AI pretraga) */
+    track("search_used", {
+      source: "hero",
+      filters: trimmed ? "pretraga" : "najpopularniji",
+      firstFilter: trimmed || "najpopularniji",
+    });
     void navigate({
       to: "/telefoni",
       search: (prev) => ({ ...prev, pretraga: trimmed || undefined }),

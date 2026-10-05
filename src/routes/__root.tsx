@@ -76,6 +76,14 @@ function RootDocument({ children }: { children: ReactNode }) {
 
           gtag('config', 'G-LN99B689HL');`}
         </script>
+        {/* Umami analitika — mjere se SAMO produkcijski hostovi (data-hostname) */}
+        <script
+          async
+          defer
+          data-website-id="c0a9e5fe-5414-4343-86c0-872fd73bf64c"
+          data-hostname="phone.ba,www.phone.ba,phone-ba-maso-webs-projects.vercel.app,978e64f2bcc18c10d795dc4115634aba.ctonew.app"
+          src="https://umami-phone-ba.vercel.app/tracker.js"
+        />
         <HeadContent />
       </head>
       <body>

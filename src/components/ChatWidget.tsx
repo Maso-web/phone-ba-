@@ -15,6 +15,7 @@ import {
   sortPhones,
   type FilterOptions,
 } from "~/lib/catalog";
+import { track } from "~/lib/analytics";
 import { PhoneVisual } from "./PhoneVisual";
 
 /**
@@ -318,10 +319,23 @@ export function ChatWidget() {
   };
 
   const applyBrend = (br: BrandAnswer) => {
-    const done = (prev: Answers): Answers => ({ ...prev, brend: br });
+    const done: Answers = { ...answers, brend: br };
     setAnswers(done);
     setStep("done");
-    botSays(() => resultsMsg(recommend(done(answers)), nextId()));
+    const rec = recommend(done);
+    /* Poslovni događaj: savjetnik je dao preporuku (odgovori + koji modeli) */
+    track("ai_advisor_recommendation", {
+      budget:
+        done.budzet === undefined
+          ? "nije_bitno"
+          : done.budzet.kind === "band"
+            ? done.budzet.band
+            : done.budzet.q,
+      purpose: done.namjena ?? "svakodnevna",
+      brand: br,
+      results: rec.phones.map((p) => p.slug).join(","),
+    });
+    botSays(() => resultsMsg(rec, nextId()));
   };
 
   /* Klik na brzi odgovor (čip) */
@@ -376,7 +390,11 @@ export function ChatWidget() {
         <button
           ref={launcherRef}
           type="button"
-          onClick={() => setOpen(true)}
+          onClick={() => {
+            /* Poslovni događaj: otvaranje AI savjetnika */
+            track("ai_advisor_opened");
+            setOpen(true);
+          }}
           aria-label="Otvori AI savjetnika — preporuke telefona kroz 3 pitanja"
           className="group fixed bottom-5 right-5 z-[70] flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-brand-500 to-accent-500 shadow-[0_10px_34px_-8px_rgba(62,123,250,0.75),0_0_0_1px_rgba(255,255,255,0.12)] transition-all duration-200 hover:scale-105 hover:shadow-[0_14px_40px_-8px_rgba(34,197,94,0.7),0_0_0_1px_rgba(255,255,255,0.18)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-400 active:scale-95"
         >

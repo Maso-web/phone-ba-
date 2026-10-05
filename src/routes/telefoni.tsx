@@ -1,4 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useRef } from "react";
 import {
   BAND_LABELS,
   BRAND_LABELS,
@@ -15,6 +16,7 @@ import { PhoneCard } from "~/components/PhoneCard";
 import { DemoNote } from "~/components/Badges";
 import { SponsoredCard } from "~/components/SponsoredCard";
 import { getCatalogBannerOffer } from "~/data/sponsored";
+import { track } from "~/lib/analytics";
 
 export const Route = createFileRoute("/telefoni")({
   validateSearch: (search) => normalizeCatalogSearch(search),
@@ -45,6 +47,8 @@ const FUNKCIJA_FILTERS: AttributeTag[] = [
 function Telefoni() {
   const search = Route.useSearch();
   const navigate = useNavigate();
+  /** Vrijeme zadnjeg search_used događaja — sprečava spam pri kucanju. */
+  const lastSearchTrack = useRef(0);
 
   const aktivniFiltri: { key: keyof CatalogSearch; label: string }[] = [];
   if (search.budzet) {
@@ -74,6 +78,22 @@ function Telefoni() {
   const bannerOffer = getCatalogBannerOffer();
 
   const updateSearch = (patch: Partial<CatalogSearch>) => {
+    /* Poslovni događaj: korisnik je pokrenuo/izmijenio filtere u katalogu.
+       "sort" nije pretraga; kucanje u polje pretrage se ograničava (1,2 s)
+       da jedan upit ne pošalje desetine događaja. */
+    const keys = Object.keys(patch).filter((k) => k !== "sort");
+    if (keys.length > 0) {
+      const onlyText = keys.length === 1 && keys[0] === "pretraga";
+      const now = Date.now();
+      if (!onlyText || now - lastSearchTrack.current > 1200) {
+        lastSearchTrack.current = now;
+        track("search_used", {
+          source: "katalog",
+          filters: keys.join(","),
+          firstFilter: keys[0],
+        });
+      }
+    }
     void navigate({
       to: "/telefoni",
       search: (prev) => ({ ...prev, ...patch }),

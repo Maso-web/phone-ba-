@@ -1,5 +1,6 @@
 import type { SponsoredOffer } from "~/data/sponsored";
 import { formatKM } from "~/lib/catalog";
+import { track } from "~/lib/analytics";
 
 /**
  * Sponzorisana ponuda — premium kartica jasno odvojena od organskih
@@ -33,6 +34,14 @@ function SponsorCta({ offer }: { offer: SponsoredOffer }) {
       href={offer.ctaUrl}
       target="_blank"
       rel="noopener noreferrer"
+      onClick={() =>
+        /* Poslovni događaj: klik na sponzorisanu ponudu */
+        track("sponsored_click", {
+          sponsor: offer.logoText,
+          name: offer.dealTitle,
+          position: offer.position,
+        })
+      }
       aria-label={`${offer.ctaLabel} — ${offer.logoText} (sponzorisana ponuda)`}
       className="inline-flex items-center justify-center gap-2 rounded-xl border border-warn-500/30 bg-warn-500/10 px-4 py-2 text-[13px] font-bold text-warn-300 transition-all duration-200 hover:border-warn-500/60 hover:bg-warn-500/15 hover:text-warn-200"
     >

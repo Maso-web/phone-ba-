@@ -5,6 +5,7 @@ import {
 } from "~/data/shop_prices";
 import { formatKM } from "~/lib/catalog";
 import { formatScrapeDate } from "~/lib/dates";
+import { track } from "~/lib/analytics";
 
 /**
  * "Cijene u online shopovima — stvarne cijene u BiH": sekcija sa stvarnim
@@ -116,6 +117,14 @@ export function ShopPricesSection({ data }: { data: PhoneShopPrices }) {
                 href={o.url}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() =>
+                  /* Poslovni događaj: klik na ponudu trgovine */
+                  track("shop_offer_click", {
+                    model: data.modelLabel,
+                    shop: o.shop,
+                    priceKM: o.cijena_km,
+                  })
+                }
                 className="inline-flex items-center gap-1 text-[12.5px] font-semibold text-brand-300 transition-colors hover:text-white"
                 aria-label={`Pogledaj ${o.naziv} u shopu ${o.shop} — ${formatKM(o.cijena_km)}`}
               >
