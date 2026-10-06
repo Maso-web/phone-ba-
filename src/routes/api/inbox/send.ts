@@ -1,24 +1,19 @@
 import { createFileRoute } from "@tanstack/react-router";
 import {
-  EMAIL_RE,
+  composeHtml,
+  insertOutbound,
   isAuthenticated,
   json,
   missingInboxEnv,
   sendViaResend,
+  validateAttachments,
+  validateRecipients,
 } from "~/lib/inbox";
-
-/** Kratka HTML verzija teksta (bez vanjskih resursa). */
-function textToHtml(text: string): string {
-  const escaped = text
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;");
-  return `<!doctype html><html lang="bs"><body style="font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#0f172a;line-height:1.6"><p style="white-space:pre-line">${escaped}</p><p style="color:#64748b;font-size:13px">— tim phone.ba<br /><a href="mailto:hello@phone.ba">hello@phone.ba</a></p></body></html>`;
-}
-
 /**
- * POST /api/inbox/send — nova poruka (bez odgovaranja na postojeću).
- * Tijelo: { to: string, subject: string, text: string }
+ * POST /api/inbox/send — nova poruka (može: više adresa, predložak,
+ * vlastiti HTML, prilozi do 10 MB po fajlu / 20 MB ukupno).
+ * Tijelo: { to, subject, text, templateId?, html?, attachments?[] }
+ *   attachments: [{ filename, contentType?, contentBase64 }]
  */
 export const Route = createFileRoute("/api/inbox/send")({
   server: {
@@ -30,36 +25,78 @@ export const Route = createFileRoute("/api/inbox/send")({
         if (!isAuthenticated(request)) {
           return json({ ok: false, error: "Niste prijavljeni." }, 401);
         }
-
-        let payload: { to?: unknown; subject?: unknown; text?: unknown };
+        let payload: {
+          to?: unknown;
+          subject?: unknown;
+          text?: unknown;
+          templateId?: unknown;
+          html?: unknown;
+          attachments?: unknown;
+        };
         try {
           payload = (await request.json()) as typeof payload;
         } catch {
           return json({ ok: false, error: "Neispravan JSON." }, 400);
         }
-        const to = typeof payload.to === "string" ? payload.to.trim() : "";
         const subject =
           typeof payload.subject === "string" ? payload.subject.trim() : "";
         const text = typeof payload.text === "string" ? payload.text.trim() : "";
-        if (!EMAIL_RE.test(to)) {
-          return json({ ok: false, error: "Adresa primaoca nije ispravna." }, 400);
-        }
+        const templateId =
+          typeof payload.templateId === "string" && payload.templateId !== ""
+            ? payload.templateId
+            : null;
+        const html =
+          typeof payload.html === "string" && payload.html.trim() !== ""
+            ? payload.html
+            : null;
+        const recipients = validateRecipients(
+          typeof payload.to === "string" ? payload.to : "",
+        );
+        if (!recipients.ok) return json({ ok: false, error: recipients.error }, 400);
+        const atts = validateAttachments(payload.attachments);
+        if (!atts.ok) return json({ ok: false, error: atts.error }, 400);
         if (subject === "") {
           return json({ ok: false, error: "Predmet je obavezan." }, 400);
         }
-        if (text === "") {
+        if (text === "" && html === null) {
           return json({ ok: false, error: "Tekst poruke je obavezan." }, 400);
         }
-
         try {
-          const resendId = await sendViaResend({
-            to,
+          const bodyHtml = await composeHtml({
+            templateId,
+            html,
             subject,
             text,
-            html: textToHtml(text),
           });
-          console.log("[inbox] new message sent");
-          return json({ ok: true, id: resendId, to, subject }, 200);
+          const resendId = await sendViaResend({
+            to: recipients.list,
+            subject,
+            text,
+            html: bodyHtml,
+            attachments: atts.ok ? atts.list : [],
+          });
+          try {
+            await insertOutbound({
+              id: resendId === "" ? crypto.randomUUID() : resendId,
+              to: recipients.list.join(", "),
+              subject,
+              text,
+              html: bodyHtml,
+              attachmentCount: atts.ok ? atts.list.length : 0,
+            });
+          } catch (err) {
+            console.error(
+              "[inbox] outbound archive failed:",
+              err instanceof Error ? err.message.slice(0, 200) : "unknown",
+            );
+          }
+          console.log(
+            `[inbox] sent to ${recipients.list.length} addr (atts=${atts.ok ? atts.list.length : 0})`,
+          );
+          return json(
+            { ok: true, id: resendId, to: recipients.list, subject },
+            200,
+          );
         } catch (err) {
           console.error(
             "[inbox] send failed:",

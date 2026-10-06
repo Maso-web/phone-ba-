@@ -1,7 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { getInbound, isAuthenticated, json, missingInboxEnv } from "~/lib/inbox";
-
-/** GET /api/inbox/get?id=<email_id> — jedna poruka sa html/text tijelom. */
+import {
+  getInbound,
+  isAuthenticated,
+  json,
+  listInboundAttachments,
+  missingInboxEnv,
+} from "~/lib/inbox";
+/** GET /api/inbox/get?id=<email_id> — jedna poruka sa tijelom i prilozima. */
 export const Route = createFileRoute("/api/inbox/get")({
   server: {
     handlers: {
@@ -21,7 +26,8 @@ export const Route = createFileRoute("/api/inbox/get")({
           if (!message) {
             return json({ ok: false, error: "Poruka nije nađena." }, 404);
           }
-          return json({ ok: true, message }, 200);
+          const attachments = await listInboundAttachments(id);
+          return json({ ok: true, message, attachments }, 200);
         } catch (err) {
           console.error(
             "[inbox] get failed:",

@@ -4,7 +4,9 @@ import {
   insertInbound,
   json,
   missingInboundEnv,
+  storeInboundAttachments,
   verifyResendWebhook,
+  type ReceivedAttachment,
 } from "~/lib/inbox";
 
 /**
@@ -81,6 +83,7 @@ export const Route = createFileRoute("/api/inbound")({
         let from = asString(data.from) ?? "";
         let messageId = asString(data.message_id);
         let receivedAt = asString(data.created_at);
+        let fullAttachments: ReceivedAttachment[] = [];
         try {
           const full = await fetchReceivedEmail(emailId);
           text = full.text;
@@ -89,6 +92,7 @@ export const Route = createFileRoute("/api/inbound")({
           from = full.from ?? from;
           messageId = full.messageId ?? messageId;
           receivedAt = full.createdAt ?? receivedAt;
+          fullAttachments = full.attachments;
         } catch (err) {
           const status = err instanceof Error ? err.message : "unknown";
           console.error("[inbound] body fetch failed:", status);
@@ -105,8 +109,20 @@ export const Route = createFileRoute("/api/inbound")({
             html,
             receivedAt,
           });
+          let attachmentCount = 0;
+          try {
+            attachmentCount = await storeInboundAttachments(
+              emailId,
+              fullAttachments,
+            );
+          } catch (err) {
+            console.error(
+              "[inbound] attachment store failed:",
+              err instanceof Error ? err.message.slice(0, 200) : "unknown",
+            );
+          }
           console.log(
-            `[inbound] ${inserted ? "stored" : "duplicate"} message (text=${text !== null} html=${html !== null})`,
+            `[inbound] ${inserted ? "stored" : "duplicate"} message (text=${text !== null} html=${html !== null} atts=${attachmentCount})`,
           );
           return json({ ok: true, stored: inserted }, 200);
         } catch (err) {

@@ -1,26 +1,18 @@
 import { createFileRoute } from "@tanstack/react-router";
 import {
-  EMAIL_RE,
+  composeHtml,
   getInbound,
+  insertOutbound,
   isAuthenticated,
   json,
   markReplied,
   missingInboxEnv,
   sendViaResend,
+  validateAttachments,
 } from "~/lib/inbox";
-
-/** Kratka HTML verzija teksta odgovora (bez ijednog vanjskog resursa). */
-function textToHtml(text: string): string {
-  const escaped = text
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;");
-  return `<!doctype html><html lang="bs"><body style="font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#0f172a;line-height:1.6"><p style="white-space:pre-line">${escaped}</p><p style="color:#64748b;font-size:13px">— tim phone.ba<br /><a href="mailto:hello@phone.ba">hello@phone.ba</a></p></body></html>`;
-}
-
 /**
  * POST /api/inbox/reply — odgovor na primljenu poruku.
- * Tijelo: { id: string, text: string }
+ * Tijelo: { id, text, templateId?, html?, attachments?[] }
  * Šalje preko Resend API-ja sa `From: hello@phone.ba` i `In-Reply-To: <message_id>`
  * (nit ostaje cijela), pa u bazi označi `replied = true`.
  */
@@ -34,8 +26,13 @@ export const Route = createFileRoute("/api/inbox/reply")({
         if (!isAuthenticated(request)) {
           return json({ ok: false, error: "Niste prijavljeni." }, 401);
         }
-
-        let payload: { id?: unknown; text?: unknown };
+        let payload: {
+          id?: unknown;
+          text?: unknown;
+          templateId?: unknown;
+          html?: unknown;
+          attachments?: unknown;
+        };
         try {
           payload = (await request.json()) as typeof payload;
         } catch {
@@ -43,11 +40,20 @@ export const Route = createFileRoute("/api/inbox/reply")({
         }
         const id = typeof payload.id === "string" ? payload.id : "";
         const text = typeof payload.text === "string" ? payload.text.trim() : "";
+        const templateId =
+          typeof payload.templateId === "string" && payload.templateId !== ""
+            ? payload.templateId
+            : null;
+        const html =
+          typeof payload.html === "string" && payload.html.trim() !== ""
+            ? payload.html
+            : null;
+        const atts = validateAttachments(payload.attachments);
+        if (!atts.ok) return json({ ok: false, error: atts.error }, 400);
         if (id === "") return json({ ok: false, error: "Nedostaje id." }, 400);
-        if (text === "") {
+        if (text === "" && html === null) {
           return json({ ok: false, error: "Tekst odgovora je obavezan." }, 400);
         }
-
         try {
           const message = await getInbound(id);
           if (!message) {
@@ -56,23 +62,38 @@ export const Route = createFileRoute("/api/inbox/reply")({
           const to = (message.from_addr.match(/<([^>]+)>/)?.[1] ?? message.from_addr)
             .trim()
             .toLowerCase();
-          if (!EMAIL_RE.test(to)) {
-            return json(
-              { ok: false, error: "Adresa pošiljaoca nije ispravna." },
-              400,
-            );
-          }
           const subject = /^re:/i.test(message.subject)
             ? message.subject
             : `Re: ${message.subject}`.trim();
-
+          const bodyHtml = await composeHtml({
+            templateId,
+            html,
+            subject,
+            text,
+          });
           const resendId = await sendViaResend({
             to,
             subject,
             text,
-            html: textToHtml(text),
+            html: bodyHtml,
             inReplyTo: message.message_id,
+            attachments: atts.ok ? atts.list : [],
           });
+          try {
+            await insertOutbound({
+              id: resendId === "" ? crypto.randomUUID() : resendId,
+              to,
+              subject,
+              text,
+              html: bodyHtml,
+              attachmentCount: atts.ok ? atts.list.length : 0,
+            });
+          } catch (err) {
+            console.error(
+              "[inbox] outbound archive failed:",
+              err instanceof Error ? err.message.slice(0, 200) : "unknown",
+            );
+          }
           await markReplied(id);
           console.log("[inbox] reply sent");
           return json({ ok: true, id: resendId, to, subject }, 200);
