@@ -233,23 +233,21 @@ export async function fetchReceivedEmail(emailId: string): Promise<{
   const asString = (v: unknown): string | null =>
     typeof v === "string" && v !== "" ? v : null;
   const to = data.to;
-  const rawAtts = (data.attachments ??
-    data.attachements ??
-    []) as Array<Record<string, unknown>>;
-  const attachments: ReceivedAttachment[] = Array.isArray(rawAtts)
-    ? rawAtts
-        .filter((a) => a && typeof a === "object")
-        .map((a) => {
-          const content = asString(a.content) ?? asString(a.data) ?? "";
-          return {
-            filename: asString(a.filename) ?? "prilog",
-            contentBase64: content,
-            contentType:
-              asString(a.content_type) ?? asString(a.contentType) ?? null,
-          };
-        })
-        .filter((a) => a.contentBase64 !== "")
-    : [];
+  let attachments: ReceivedAttachment[] = [];
+  const metaAtts = Array.isArray(data.attachments ?? data.attachements)
+    ? (data.attachments ?? data.attachements).length
+    : 0;
+  if (metaAtts > 0) {
+    try {
+      attachments = await fetchRawAttachments(emailId);
+    } catch (err) {
+      // Prilozi nisu blokada za poruku — tijelo stiže bez njih.
+      console.error(
+        "[inbox] raw attachments failed:",
+        err instanceof Error ? err.message.slice(0, 200) : "unknown",
+      );
+    }
+  }
   return {
     text: asString(data.text) ?? asString(data.text_body) ?? null,
     html: asString(data.html) ?? asString(data.html_body) ?? null,
@@ -260,6 +258,36 @@ export async function fetchReceivedEmail(emailId: string): Promise<{
     createdAt: asString(data.created_at) ?? asString(data.createdAt) ?? null,
     attachments,
   };
+}
+/** Dohvati i parsiraj priloge iz raw MIME poruke (Resend: samo metapodaci u GET-u). */
+async function fetchRawAttachments(emailId: string): Promise<ReceivedAttachment[]> {
+  const res = await fetch(`${RESEND_BASE}/emails/receiving/${emailId}`, {
+    headers: { Authorization: `Bearer ${resendKey()}` },
+  });
+  if (!res.ok) return [];
+  const data = (await res.json()) as Record<string, unknown>;
+  const raw = data.raw as Record<string, unknown> | undefined;
+  const downloadUrl =
+    raw && typeof raw.download_url === "string" ? raw.download_url : null;
+  if (!downloadUrl) return [];
+  const rawRes = await fetch(downloadUrl, {
+    headers: { Authorization: `Bearer ${resendKey()}` },
+  });
+  if (!rawRes.ok) return [];
+  const { simpleParser } = await import("mailparser");
+  const parsed = await simpleParser(Buffer.from(await rawRes.arrayBuffer()));
+  const list: ReceivedAttachment[] = [];
+  for (const a of parsed.attachments ?? []) {
+    const buf = a.content;
+    const name = a.filename?.trim() || "prilog";
+    if (!buf || buf.length === 0) continue;
+    list.push({
+      filename: name,
+      contentBase64: buf.toString("base64"),
+      contentType: a.contentType ?? null,
+    });
+  }
+  return list;
 }
 /** Slanje preko Resend API-ja (isto kao `hello@phone.ba` u newsletteru). */
 export async function sendViaResend(input: {
