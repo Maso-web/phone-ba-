@@ -2,3 +2,5 @@ User-agent: *
 Allow: /
 Disallow: /inbox
 Disallow: /api/
+
+Sitemap: https://www.phone.ba/sitemap.xml
