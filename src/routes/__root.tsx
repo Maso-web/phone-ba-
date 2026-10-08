@@ -17,15 +17,37 @@ export const Route = createRootRoute({
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { name: "theme-color", content: "#05080d" },
+      { name: "robots", content: "index, follow, max-image-preview:large, max-snippet:-1" },
       {
         title:
-          "phone.ba — Pronađi idealan telefon i najbolju cijenu u BiH",
+          "phone.ba — AI poređenje cijena telefona u BiH",
       },
       {
         name: "description",
         content:
-          "AI agregator cijena telefona u Bosni i Hercegovini. Usporedi ponude BH Telecom, HT Eronet, m:tel i lokalnih trgovina — sve cijene u KM na jednom mjestu.",
+          "Usporedi cijene telefona u BiH na jednom mjestu — BH Telecom, HT Eronet, m:tel i lokalne trgovine. AI preporuke, cijene u KM, servisi i oprema.",
       },
+      /* Open Graph — dijeljenje na Facebook, Viber, WhatsApp, Messenger */
+      { property: "og:type", content: "website" },
+      { property: "og:site_name", content: "phone.ba" },
+      { property: "og:locale", content: "bs_BA" },
+      { property: "og:title", content: "phone.ba — AI poređenje cijena telefona u BiH" },
+      {
+        property: "og:description",
+        content:
+          "Usporedi cijene telefona u BiH na jednom mjestu — BH Telecom, HT Eronet, m:tel i lokalne trgovine. AI preporuke, cijene u KM.",
+      },
+      { property: "og:image", content: "https://phone.ba/og-slika.png" },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
+      /* Twitter cards */
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "phone.ba — AI poređenje cijena telefona u BiH" },
+      {
+        name: "twitter:description",
+        content: "Usporedi cijene telefona u BiH na jednom mjestu — telekomi i lokalne trgovine, sve u KM.",
+      },
+      { name: "twitter:image", content: "https://phone.ba/og-slika.png" },
     ],
     links: [{ rel: "stylesheet", href: appCss }],
   }),

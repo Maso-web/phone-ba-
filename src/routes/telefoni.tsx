@@ -12,6 +12,7 @@ import {
   type SortKey,
 } from "~/lib/catalog";
 import type { AttributeTag, BrandSlug, PriceBand } from "~/data/phones";
+import { phones } from "~/data/phones";
 import { PhoneCard } from "~/components/PhoneCard";
 import { DemoNote } from "~/components/Badges";
 import { SponsoredCard } from "~/components/SponsoredCard";
@@ -22,11 +23,35 @@ export const Route = createFileRoute("/telefoni")({
   validateSearch: (search) => normalizeCatalogSearch(search),
   head: () => ({
     meta: [
-      { title: "Svi telefoni — uporedi cijene u KM | phone.ba" },
+      { title: "Telefoni — cijene i poređenje u BiH | phone.ba" },
       {
         name: "description",
         content:
-          "Usporedi cijene telefona u BiH kod BH Telecom, HT Eronet, m:tel i lokalnih trgovina. Filtriraj po budžetu, brendu i ključnoj funkciji.",
+          "Svi modeli telefona sa cijenama u KM. Filtriranje po brendu, budžetu i funkciji (kamera, baterija, gaming). Najbolja cijena u BiH na jednom mjestu.",
+      },
+      { property: "og:url", content: "https://phone.ba/telefoni" },
+      { property: "og:title", content: "Telefoni — cijene i poređenje u BiH | phone.ba" },
+      {
+        property: "og:description",
+        content:
+          "Svi modeli telefona sa cijenama u KM. Filtriranje po brendu, budžetu i funkciji. Najbolja cijena u BiH na jednom mjestu.",
+      },
+    ],
+    links: [{ rel: "canonical", href: "https://phone.ba/telefoni" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "ItemList",
+          name: "Telefoni po cijenama u BiH",
+          itemListElement: phones.map((p, i) => ({
+            "@type": "ListItem",
+            position: i + 1,
+            name: p.name,
+            url: `https://phone.ba/telefon/${p.slug}`,
+          })),
+        }),
       },
     ],
   }),

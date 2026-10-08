@@ -25,14 +25,26 @@ export const Route = createFileRoute("/telefon/$slug")({
       meta: phone
         ? [
             {
-              title: `${phone.name} — cijene i uporedba ponuda | phone.ba`,
+              title: `${phone.name} — cijena u BiH, ponude i specifikacije | phone.ba`,
             },
             {
               name: "description",
-              content: `${phone.name}: uporedi cijene kod BH Telecom, HT Eronet, m:tel i lokalnih trgovina. ${phone.tagline} Cijene u KM.`,
+              content: `${phone.name} — uporedi cijene u KM kod BH Telecom, HT Eronet, m:tel i trgovina. Specifikacije, kamera, baterija i gdje je najjeftinije kupiti u BiH.`,
+            },
+            { property: "og:url", content: `https://phone.ba/telefon/${phone.slug}` },
+            {
+              property: "og:title",
+              content: `${phone.name} — cijena u BiH, ponude i specifikacije | phone.ba`,
+            },
+            {
+              property: "og:description",
+              content: `${phone.name} — uporedi cijene u KM kod BH Telecom, HT Eronet, m:tel i trgovina. Specifikacije i gdje je najjeftinije kupiti u BiH.`,
             },
           ]
         : [{ title: "Telefon nije pronađen | phone.ba" }],
+      links: phone
+        ? [{ rel: "canonical", href: `https://phone.ba/telefon/${phone.slug}` }]
+        : [],
     };
   },
   component: PhoneDetail,

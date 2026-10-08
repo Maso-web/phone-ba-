@@ -12,12 +12,60 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       {
-        title: "phone.ba — Pronađi idealan telefon i najbolju cijenu u BiH",
+        title: "phone.ba — AI poređenje cijena telefona u BiH",
       },
       {
         name: "description",
         content:
-          "AI pretraga i uporedba cijena telefona u BiH. Usporedi ponude BH Telecom, HT Eronet, m:tel i lokalnih trgovina — sve u KM.",
+          "Usporedi cijene telefona u BiH na jednom mjestu — BH Telecom, HT Eronet, m:tel i lokalne trgovine. AI preporuke, cijene u KM, servisi i oprema.",
+      },
+      { property: "og:url", content: "https://phone.ba/" },
+      {
+        property: "og:title",
+        content: "phone.ba — AI poređenje cijena telefona u BiH",
+      },
+      {
+        property: "og:description",
+        content:
+          "Usporedi cijene telefona u BiH na jednom mjestu — BH Telecom, HT Eronet, m:tel i lokalne trgovine. AI preporuke, cijene u KM.",
+      },
+      { name: "twitter:url", content: "https://phone.ba/" },
+    ],
+    links: [{ rel: "canonical", href: "https://phone.ba/" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: "phone.ba",
+          alternateName: "AI agregator cijena telefona u BiH",
+          url: "https://phone.ba/",
+          inLanguage: "bs",
+          publisher: {
+            "@type": "Organization",
+            name: "phone.ba",
+            url: "https://phone.ba/",
+            logo: { "@type": "ImageObject", url: "https://phone.ba/logo-512.png" },
+          },
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          name: "phone.ba",
+          url: "https://phone.ba/",
+          email: "hello@phone.ba",
+          address: { "@type": "PostalAddress", addressCountry: "BA" },
+          contactPoint: {
+            "@type": "ContactPoint",
+            email: "hello@phone.ba",
+            contactType: "customer support",
+            availableLanguage: ["bs"],
+          },
+        }),
       },
     ],
   }),

@@ -33,7 +33,15 @@ export const Route = createFileRoute("/gadzeti")({
         content:
           "Pametni satovi, bežične slušalice, narukvice i power bankovi u BiH — uporedi stvarne cijene iz BH online shopova u KM.",
       },
+      { property: "og:url", content: "https://phone.ba/gadzeti" },
+      { property: "og:title", content: "Gadžeti — pametni satovi, slušalice i oprema | phone.ba" },
+      {
+        property: "og:description",
+        content:
+          "Pametni satovi, bežične slušalice, narukvice i power bankovi u BiH — uporedi stvarne cijene iz BH online shopova u KM.",
+      },
     ],
+    links: [{ rel: "canonical", href: "https://phone.ba/gadzeti" }],
   }),
   component: Gadzeti,
 });

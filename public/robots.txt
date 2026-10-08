@@ -3,4 +3,4 @@ Allow: /
 Disallow: /inbox
 Disallow: /api/
 
-Sitemap: https://www.phone.ba/sitemap.xml
+Sitemap: https://phone.ba/sitemap.xml

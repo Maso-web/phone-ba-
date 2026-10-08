@@ -13,7 +13,15 @@ export const Route = createFileRoute("/servisi")({
         content:
           "Imenik servisa za popravku telefona i prodavnica opreme iz cijele Bosne i Hercegovine — stvarni poslovni oglasi sa OLX.ba na jednom mjestu.",
       },
+      { property: "og:url", content: "https://phone.ba/servisi" },
+      { property: "og:title", content: "Servisi i Oprema — imenik u tvom gradu | phone.ba" },
+      {
+        property: "og:description",
+        content:
+          "Imenik servisa za popravku telefona i prodavnica opreme iz cijele Bosne i Hercegovine — stvarni poslovni oglasi sa OLX.ba na jednom mjestu.",
+      },
     ],
+    links: [{ rel: "canonical", href: "https://phone.ba/servisi" }],
   }),
   component: Servisi,
 });
