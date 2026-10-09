@@ -6,9 +6,9 @@
  * Izvor: /home/team/shared/shops-export/shopovi_telefoni.json
  * (uvoz 2026-10-09). Snapshot 357 telefona iz shopova: univerzalno, iqmobile, fontele, mobitech, digitalcity.
  * Shop mobitelstudio.ba je blokiran (Cloudflare) i NIJE uključen.
- * Rezultat: 31 od 47 modela kataloga ima stvarne cijene u shopovima.
+ * Rezultat: 37 od 54 modela kataloga ima stvarne cijene u shopovima.
  * Uparili su se samo modeli koje shopovi stvarno imaju u ponudi:
- *   google-pixel-10a (2), honor-600 (4), honor-600-lite (3), honor-600-pro (2), honor-magic8-lite (4), honor-x7d (1), iphone-13 (3), iphone-14 (2), iphone-15 (3), iphone-15-pro (2), iphone-16 (5), iphone-17 (4), iphone-17-pro (6), iphone-17e (3), iphone-air (1), motorola-moto-g86 (1), samsung-galaxy-a07 (6), samsung-galaxy-a17 (8), samsung-galaxy-a27 (8), samsung-galaxy-a37 (8), samsung-galaxy-a54 (1), samsung-galaxy-a57 (8), samsung-galaxy-s25-ultra (5), samsung-galaxy-s26-ultra (5), xiaomi-17t (7), xiaomi-redmi-15c (6), xiaomi-redmi-17 (8), xiaomi-redmi-note-13-pro (1), xiaomi-redmi-note-14 (2), xiaomi-redmi-note-15 (8), xiaomi-redmi-note-15-pro (5).
+ *   google-pixel-10a (2), honor-600 (4), honor-600-lite (3), honor-600-pro (2), honor-magic8-lite (4), honor-x7d (1), iphone-13 (3), iphone-14 (2), iphone-15 (3), iphone-15-pro (2), iphone-16 (5), iphone-17 (4), iphone-17-pro (6), iphone-17e (3), iphone-air (1), motorola-moto-g05 (1), motorola-moto-g86 (1), samsung-galaxy-a07 (6), samsung-galaxy-a17 (8), samsung-galaxy-a27 (8), samsung-galaxy-a37 (8), samsung-galaxy-a54 (1), samsung-galaxy-a57 (8), samsung-galaxy-s25-ultra (5), samsung-galaxy-s26-ultra (5), samsung-galaxy-z-flip-8 (1), samsung-galaxy-z-fold-8 (3), xiaomi-17t (7), xiaomi-poco-m7 (1), xiaomi-poco-x8-pro (1), xiaomi-redmi-15 (6), xiaomi-redmi-15c (6), xiaomi-redmi-17 (8), xiaomi-redmi-note-13-pro (1), xiaomi-redmi-note-14 (2), xiaomi-redmi-note-15 (8), xiaomi-redmi-note-15-pro (5).
  * Ostali modeli kataloga nemaju pogodaka u ovom snapshotu (namjerno se NE
  * pogađa po sličnosti — npr. "iPhone 14 Pro Max" nije "iPhone 14", a
  * "HONOR X8a" nije "Honor X8b"). Nazivi kao "koristen"/"Refurbished"
@@ -38,6 +38,8 @@
  *   samsung-galaxy-a27            Samsung Galaxy A27 (?:galaxy\s+a27|samsung\s+a27)(?![\w])
  *   samsung-galaxy-a07            Samsung Galaxy A07 (?:galaxy\s+a07|samsung\s+a07)(?![\w])
  *   samsung-galaxy-a17            Samsung Galaxy A17 (?:galaxy\s+a17|samsung\s+a17)(?![\w])
+ *   samsung-galaxy-z-fold-8       Samsung Galaxy Z Fold 8 galaxy z fold 8(?![\w])(?!\s*ultra\b)
+ *   samsung-galaxy-z-flip-8       Samsung Galaxy Z Flip 8 galaxy z flip 8(?![\w])
  *   xiaomi-17t                    Xiaomi 17T         xiaomi\s+(?:mobitel\s+)?17t(?![\w])(?!\s*pro\b)
  *   xiaomi-14                     Xiaomi 14          xiaomi 14(?![\w])(?!\s*(?:t|pro|ultra)\b)
  *   xiaomi-redmi-note-15-pro      Redmi Note 15 Pro  redmi note 15 pro(?![\w])(?!\s*(?:plus|max)\b)(?!\s*\+)
@@ -47,6 +49,9 @@
  *   xiaomi-redmi-note-13          Redmi Note 13      redmi note 13(?![\w])(?!\s*(?:pro|plus|max)\b)(?!\s*\+)
  *   xiaomi-redmi-17               Redmi 17           redmi 17(?![\w])(?!\s*(?:pro|plus|c)\b)
  *   xiaomi-redmi-15c              Redmi 15C          redmi 15c(?![\w])
+ *   xiaomi-redmi-15               Redmi 15           redmi 15(?![\w])(?!\s*(?:c|note|pro|turbo)\b)
+ *   xiaomi-poco-x8-pro            Poco X8 Pro        poco x8 pro(?![\w])
+ *   xiaomi-poco-m7                Poco M7            poco m7(?![\w])(?!\s*(?:pro|plus|5g)\b)
  *   xiaomi-redmi-13c              Redmi 13C          redmi 13c(?![\w])
  *   xiaomi-poco-x6                Poco X6            poco x6(?![\w])(?!\s*(?:pro|neo)\b)
  *   honor-600-pro                 Honor 600 Pro      honor\s+(?:mobitel\s+)?600 pro(?![\w])
@@ -59,6 +64,8 @@
  *   honor-x7d                     Honor X7d          honor x7d(?![\w])
  *   motorola-edge-60              Motorola Edge 60   motorola edge 60(?![\w])(?!\s*(?:pro|neo|fusion)\b)
  *   motorola-moto-g86             Motorola Moto G86  moto g86(?![\w])
+ *   motorola-moto-g77             Motorola Moto G77  moto g77(?![\w])
+ *   motorola-moto-g05             Motorola Moto G05  moto g05(?![\w])(?!\s*plus\b)
  *   realme-16-pro                 Realme 16 Pro      realme 16 pro(?![\w])
  *   realme-16                     Realme 16          realme 16(?![\w])(?!\s*pro\b)
  *   oneplus-nord-ce-5             OnePlus Nord CE 5  oneplus nord ce 5(?![\w])
@@ -709,6 +716,26 @@ export const shopPrices: PhoneShopPrices[] = [
     sources: ["IQ Mobile"],
   },
   {
+    slug: "motorola-moto-g05",
+    modelLabel: "Motorola Moto G05",
+    minPrice: 189,
+    count: 1,
+    availableCount: 1,
+    minListedPrice: 189,
+    offers: [
+      {
+        shop_key: "univerzalno",
+        shop: "Univerzalno",
+        naziv: "Motorola Moto G05 64GB (4GB RAM) Red (crvena boja) - Po narudžbi",
+        cijena_km: 189,
+        dostupnost: "Po narudžbi",
+        url: "https://www.univerzalno.com/bs/motorola-moto-g05-64gb-4gb-ram",
+        datum: "2026-10-09",
+      },
+    ],
+    sources: ["Univerzalno"],
+  },
+  {
     slug: "motorola-moto-g86",
     modelLabel: "Motorola Moto G86",
     minPrice: 499,
@@ -1258,6 +1285,64 @@ export const shopPrices: PhoneShopPrices[] = [
     sources: ["IQ Mobile", "Mobitech", "fonTELe"],
   },
   {
+    slug: "samsung-galaxy-z-flip-8",
+    modelLabel: "Samsung Galaxy Z Flip 8",
+    minPrice: 2799,
+    count: 1,
+    availableCount: 1,
+    minListedPrice: 2799,
+    offers: [
+      {
+        shop_key: "fontele",
+        shop: "fonTELe",
+        naziv: "SAMSUNG mobitel Galaxy Z Flip 8 512B 12GB Tamnosiva",
+        cijena_km: 2799,
+        dostupnost: null,
+        url: "https://fontele.ba/proizvod/samsung-mobitel-galaxy-z-flip-8-512b-12gb-tamnosiva/9260",
+        datum: "2026-10-09",
+      },
+    ],
+    sources: ["fonTELe"],
+  },
+  {
+    slug: "samsung-galaxy-z-fold-8",
+    modelLabel: "Samsung Galaxy Z Fold 8",
+    minPrice: 3999,
+    count: 3,
+    availableCount: 3,
+    minListedPrice: 3999,
+    offers: [
+      {
+        shop_key: "mobitech",
+        shop: "Mobitech",
+        naziv: "SAMSUNG GALAXY Z FOLD 8 12GB 256GB",
+        cijena_km: 3999,
+        dostupnost: null,
+        url: "https://mobitech.ba/prodavnica/telefoni/samsung-banja-luka/samsung-galaxy-z-fold-8-12gb-256gb/",
+        datum: "2026-10-09",
+      },
+      {
+        shop_key: "fontele",
+        shop: "fonTELe",
+        naziv: "SAMSUNG mobitel Galaxy Z Fold 8 256GB 12GB Krem",
+        cijena_km: 3999.6,
+        dostupnost: null,
+        url: "https://fontele.ba/proizvod/samsung-mobitel-galaxy-z-fold-8-256gb-12gb-krem/9246",
+        datum: "2026-10-09",
+      },
+      {
+        shop_key: "mobitech",
+        shop: "Mobitech",
+        naziv: "SAMSUNG GALAXY Z FOLD 8 12GB 512GB",
+        cijena_km: 4399,
+        dostupnost: null,
+        url: "https://mobitech.ba/prodavnica/telefoni/samsung-banja-luka/samsung-galaxy-z-fold-8-12gb-512gb/",
+        datum: "2026-10-09",
+      },
+    ],
+    sources: ["Mobitech", "fonTELe"],
+  },
+  {
     slug: "xiaomi-17t",
     modelLabel: "Xiaomi 17T",
     minPrice: 1332,
@@ -1330,6 +1415,111 @@ export const shopPrices: PhoneShopPrices[] = [
       },
     ],
     sources: ["Digital City", "fonTELe"],
+  },
+  {
+    slug: "xiaomi-poco-m7",
+    modelLabel: "Poco M7",
+    minPrice: 289,
+    count: 1,
+    availableCount: 1,
+    minListedPrice: 289,
+    offers: [
+      {
+        shop_key: "univerzalno",
+        shop: "Univerzalno",
+        naziv: "Xiaomi Poco M7 4G 128GB (6GB RAM)",
+        cijena_km: 289,
+        dostupnost: null,
+        url: "https://www.univerzalno.com/bs/xiaomi-poco-m7-4g-128gb-6gb-ram-black-crna-boja",
+        datum: "2026-10-09",
+      },
+    ],
+    sources: ["Univerzalno"],
+  },
+  {
+    slug: "xiaomi-poco-x8-pro",
+    modelLabel: "Poco X8 Pro",
+    minPrice: 1249,
+    count: 1,
+    availableCount: 1,
+    minListedPrice: 1249,
+    offers: [
+      {
+        shop_key: "univerzalno",
+        shop: "Univerzalno",
+        naziv: "POCO X8 Pro 5G Gold Iron Man Edition: Limitirana Stark Industries serija (12/512GB) - po narudžbi",
+        cijena_km: 1249,
+        dostupnost: "Po narudžbi",
+        url: "https://www.univerzalno.com/bs/xiaomi-poco-x8-pro-12gb512gb-iron-man-edition-gold",
+        datum: "2026-10-09",
+      },
+    ],
+    sources: ["Univerzalno"],
+  },
+  {
+    slug: "xiaomi-redmi-15",
+    modelLabel: "Redmi 15",
+    minPrice: 275,
+    count: 6,
+    availableCount: 4,
+    minListedPrice: 275,
+    offers: [
+      {
+        shop_key: "univerzalno",
+        shop: "Univerzalno",
+        naziv: "Xiaomi Redmi 15 128GB (6GB RAM)",
+        cijena_km: 275,
+        dostupnost: "Po narudžbi",
+        url: "https://www.univerzalno.com/bs/xiaomi-redmi-15-256gb-8gb-ram",
+        datum: "2026-10-09",
+      },
+      {
+        shop_key: "iqmobile",
+        shop: "IQ Mobile",
+        naziv: "Redmi 15 4G",
+        cijena_km: 278,
+        dostupnost: null,
+        url: "https://iqmobile.ba/shop/pametni-telefoni/redmi-15-4g/",
+        datum: "2026-10-09",
+      },
+      {
+        shop_key: "digitalcity",
+        shop: "Digital City",
+        naziv: "REDMI 15 8GB RAM 256 ROM SENDY PURPLE",
+        cijena_km: 376.7,
+        dostupnost: "Rasprodato",
+        url: "https://digitalcity.ba/proizvod/redmi-15-8gb-ram-256-rom-sendy-purple-6932554449759-v09g?k=2d33f1e9-05e3-44ff-903e-e82502474aaf",
+        datum: "2026-10-09",
+      },
+      {
+        shop_key: "digitalcity",
+        shop: "Digital City",
+        naziv: "REDMI 15 8GB RAM 256 ROM TITAN GRAY",
+        cijena_km: 376.7,
+        dostupnost: "Rasprodato",
+        url: "https://digitalcity.ba/proizvod/redmi-15-8gb-ram-256-rom-titan-gray?k=2d33f1e9-05e3-44ff-903e-e82502474aaf",
+        datum: "2026-10-09",
+      },
+      {
+        shop_key: "digitalcity",
+        shop: "Digital City",
+        naziv: "REDMI 15 6GB RAM 128 GB ROM MIDNIGHT BLACK",
+        cijena_km: 379,
+        dostupnost: "Posljednji komadi",
+        url: "https://digitalcity.ba/proizvod/redmi-15-6gb-ram-128-gb-rom-midnight-black?k=2d33f1e9-05e3-44ff-903e-e82502474aaf",
+        datum: "2026-10-09",
+      },
+      {
+        shop_key: "mobitech",
+        shop: "Mobitech",
+        naziv: "Xiaomi Redmi 15 8GB 256GB",
+        cijena_km: 410,
+        dostupnost: null,
+        url: "https://mobitech.ba/prodavnica/telefoni/xiaomi/xiaomi-redmi-15-8gb-256gb/",
+        datum: "2026-10-09",
+      },
+    ],
+    sources: ["Digital City", "IQ Mobile", "Mobitech", "Univerzalno"],
   },
   {
     slug: "xiaomi-redmi-15c",
