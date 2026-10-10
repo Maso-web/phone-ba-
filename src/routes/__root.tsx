@@ -182,6 +182,7 @@ function SiteNav() {
           </NavItem>
           <NavItem to="/telefoni">Telefoni</NavItem>
           <NavItem to="/gadzeti">Gadžeti</NavItem>
+          <NavItem to="/vodic/najbolji-telefoni-2026">Vodiči</NavItem>
           <NavItem to="/servisi">Servisi i Oprema</NavItem>
         </nav>
 
@@ -269,6 +270,13 @@ function SiteNav() {
               Gadžeti
             </Link>
             <Link
+              to="/vodic/najbolji-telefoni-2026"
+              onClick={() => setMenuOpen(false)}
+              className="rounded-lg px-3 py-2.5 text-[15px] font-medium text-slate-300 transition-colors hover:bg-white/[0.06] hover:text-white"
+            >
+              Vodiči
+            </Link>
+            <Link
               to="/servisi"
               onClick={() => setMenuOpen(false)}
               className="rounded-lg px-3 py-2.5 text-[15px] font-medium text-slate-300 transition-colors hover:bg-white/[0.06] hover:text-white"
@@ -337,6 +345,16 @@ function SiteFooter() {
             <li>
               <Link to="/telefoni" className="footer-link">
                 Svi telefoni
+              </Link>
+            </li>
+            <li>
+              <Link to="/vodic/najbolji-telefoni-2026" className="footer-link">
+                Najbolji telefoni 2026
+              </Link>
+            </li>
+            <li>
+              <Link to="/vodic/budzet-telefoni" className="footer-link">
+                Budžet telefoni
               </Link>
             </li>
             <li>
