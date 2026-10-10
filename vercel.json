@@ -1,5 +1,8 @@
 {
   "framework": null,
   "installCommand": "",
-  "buildCommand": "bash build-vercel.sh"
+  "buildCommand": "bash build-vercel.sh",
+  "rewrites": [
+    { "source": "/vizitkarta", "destination": "/vizitkarta.html" }
+  ]
 }
