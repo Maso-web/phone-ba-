@@ -4,7 +4,7 @@
  * GENERISANO — ne mijenjati ručno. Ponovo generiši nakon ponovnog skrejpa:
  *   python3 /home/team/shared/olx-export/regenerate_olx_prices_ts.py
  * Izvor: /home/team/shared/olx-export/olx_poslovni_radnje_servisi.json
- * (uvoz 2026-09-13). Rezultat: 3 modela sa stvarnim cijenama.
+ * (uvoz 2026-10-10). Rezultat: 3 modela sa stvarnim cijenama.
  *
  * Pravila uparivanja (regex, case-insensitive, na `naziv` oglasa):
  *   slug                          model              ključni pattern
@@ -38,7 +38,7 @@
  * Uključeni su samo oglasi sa cijenom (cijena_km != null). Ponude su
  * sortirane rastuće po cijeni; najviše 8 po modelu. `count` = broj
  * prikazanih oglasa (oglasa sa cijenom). Cijene NISU demo — to su stvarni
- * poslovni oglasi (user_type shop) sa OLX.ba, preuzeti 2026-09-13.
+ * poslovni oglasi (user_type shop) sa OLX.ba, preuzeti 2026-10-10.
  */
 
 export interface OlxOffer {
@@ -68,87 +68,52 @@ export interface PhoneOlxPrices {
 }
 
 /** Datum preuzimanja arhive (ISO) — "uvoz 13.9.2026." u UI */
-export const OLX_SCRAPE_DATE = "2026-09-13";
+export const OLX_SCRAPE_DATE = "2026-10-10";
 
 /** Stvarne OLX cijene po modelu — samo modeli sa pogodcima. */
 export const olxPrices: PhoneOlxPrices[] = [
   {
     slug: "iphone-15-pro",
     modelLabel: "iPhone 15 Pro",
-    minPrice: 1050,
+    minPrice: 1000,
     count: 1,
     offers: [
       {
         naziv: "Iphone 15 Pro 128GB 87% BH",
         grad: "Sarajevo - Centar",
-        cijena_km: 1050,
-        link: "https://olx.ba/artikal/79495716",
-        datum: "2026-09-13",
+        cijena_km: 1000,
+        link: "https://olx.ba/artikal/79686712",
+        datum: "2026-10-10",
       },
     ],
   },
   {
     slug: "iphone-15",
     modelLabel: "iPhone 15",
-    minPrice: 880,
-    count: 2,
+    minPrice: 1230,
+    count: 1,
     offers: [
       {
-        naziv: "Iphone 15 128GB Black",
-        grad: "Grude",
-        cijena_km: 880,
-        link: "https://olx.ba/artikal/78969274",
-        datum: "2026-09-13",
-      },
-      {
-        naziv: "Iphone 15 128GB Blue",
-        grad: "Zenica",
-        cijena_km: 1250,
-        link: "https://olx.ba/artikal/79416254",
-        datum: "2026-09-13",
+        naziv: "APPLE IPHONE 15 128GB KUPI NA RATE 65KM",
+        grad: "Sarajevo - Centar",
+        cijena_km: 1230,
+        link: "https://olx.ba/artikal/55446740",
+        datum: "2026-10-10",
       },
     ],
   },
   {
     slug: "iphone-14",
     modelLabel: "iPhone 14",
-    minPrice: 549.9,
-    count: 5,
+    minPrice: 729,
+    count: 1,
     offers: [
       {
-        naziv: "iPhone 14 BAT 100% +GRATIS MASKICA *KAO NOVO* [13 15]",
+        naziv: "iPhone 14  128 GB zdravlje baterije 83%",
         grad: "Sarajevo - Novo Sarajevo",
-        cijena_km: 549.9,
-        link: "https://olx.ba/artikal/79377513",
-        datum: "2026-09-12",
-      },
-      {
-        naziv: "IPHONE 14 128GB ZDRAVLJE BATERIJE 86% SVE ORIGINALNO I RADI",
-        grad: "Ljubuški",
-        cijena_km: 565,
-        link: "https://olx.ba/artikal/79188706",
-        datum: "2026-09-13",
-      },
-      {
-        naziv: "Iphone 14 128GB 87% BH",
-        grad: "Sarajevo - Centar",
-        cijena_km: 599,
-        link: "https://olx.ba/artikal/79483207",
-        datum: "2026-09-13",
-      },
-      {
-        naziv: "iPhone 14 BAT 100% +KUTIJA *KAO NOVO* [13 15]",
-        grad: "Sarajevo - Novo Sarajevo",
-        cijena_km: 649.9,
-        link: "https://olx.ba/artikal/79541838",
-        datum: "2026-09-13",
-      },
-      {
-        naziv: "IPhone 14 100% baterija",
-        grad: "Tešanj",
-        cijena_km: 649.99,
-        link: "https://olx.ba/artikal/78761985",
-        datum: "2026-09-13",
+        cijena_km: 729,
+        link: "https://olx.ba/artikal/73529738",
+        datum: "2026-10-08",
       },
     ],
   },
