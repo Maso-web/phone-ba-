@@ -52,21 +52,6 @@ export interface SponsoredOffer {
 export const sponsoredOffers: SponsoredOffer[] = [
   /* ------------------------- phone_page (2) ------------------------ */
   {
-    id: "sp-01",
-    storeName: "TehnoMarket.ba",
-    logoText: "TehnoMarket",
-    initials: "TM",
-    dealTitle: "iPhone 15 128 GB — akcijska cijena",
-    phoneSlug: "iphone-15",
-    promoPriceKM: 1899,
-    regularPriceKM: 2199,
-    badgeText: "Popust 14%",
-    ctaLabel: "Pogledaj ponudu",
-    ctaUrl: "https://www.tehnomarket.ba/telefoni",
-    active: false, // mrtav sajt (prazan server) — čeka odluku vlasnika
-    position: "phone_page",
-  },
-  {
     id: "sp-02",
     storeName: "HT Eronet d.d. Mostar",
     logoText: "HT Eronet",

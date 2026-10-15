@@ -111,7 +111,6 @@ type SellerId =
   | "bhtelecom"
   | "hteronet"
   | "mtel"
-  | "tehnomarket"
   | "ananas"
   | "emmezeta"
   | "sicko";
@@ -151,14 +150,6 @@ const SELLER_POOL: Record<
     url: "https://www.mtel.ba/Privatni/uredjaji/telefoni",
     delta: 6,
     availability: "Naruči",
-  },
-  tehnomarket: {
-    name: "TehnoMarket.ba",
-    logoText: "TehnoMarket",
-    initials: "TM",
-    url: "https://www.tehnomarket.ba/telefoni",
-    delta: -15,
-    availability: "Na stanju",
   },
   ananas: {
     name: "Ananas.ba",
@@ -241,7 +232,6 @@ const RAW_PHONES: Omit<Phone, "priceHistory">[] = [
       "bhtelecom",
       "hteronet",
       "mtel",
-      "tehnomarket",
       "ananas",
       "emmezeta",
     ]),
@@ -270,7 +260,6 @@ const RAW_PHONES: Omit<Phone, "priceHistory">[] = [
       "bhtelecom",
       "hteronet",
       "mtel",
-      "tehnomarket",
       "ananas",
       "emmezeta",
     ]),
@@ -299,7 +288,6 @@ const RAW_PHONES: Omit<Phone, "priceHistory">[] = [
       "bhtelecom",
       "hteronet",
       "mtel",
-      "tehnomarket",
       "ananas",
     ]),
   },
@@ -326,7 +314,6 @@ const RAW_PHONES: Omit<Phone, "priceHistory">[] = [
     sellers: sellersFor(1064, [
       "bhtelecom",
       "mtel",
-      "tehnomarket",
       "ananas",
       "emmezeta",
     ]),
@@ -357,7 +344,6 @@ const RAW_PHONES: Omit<Phone, "priceHistory">[] = [
       "bhtelecom",
       "hteronet",
       "mtel",
-      "tehnomarket",
       "ananas",
       "emmezeta",
     ]),
@@ -386,7 +372,6 @@ const RAW_PHONES: Omit<Phone, "priceHistory">[] = [
       "bhtelecom",
       "hteronet",
       "mtel",
-      "tehnomarket",
       "ananas",
     ]),
   },
@@ -414,7 +399,6 @@ const RAW_PHONES: Omit<Phone, "priceHistory">[] = [
       "bhtelecom",
       "hteronet",
       "mtel",
-      "tehnomarket",
       "ananas",
       "emmezeta",
     ]),
@@ -443,7 +427,6 @@ const RAW_PHONES: Omit<Phone, "priceHistory">[] = [
       "bhtelecom",
       "hteronet",
       "mtel",
-      "tehnomarket",
       "ananas",
     ]),
   },
@@ -473,7 +456,6 @@ const RAW_PHONES: Omit<Phone, "priceHistory">[] = [
       "bhtelecom",
       "hteronet",
       "mtel",
-      "tehnomarket",
       "ananas",
       "emmezeta",
     ]),
@@ -502,7 +484,6 @@ const RAW_PHONES: Omit<Phone, "priceHistory">[] = [
       "bhtelecom",
       "hteronet",
       "mtel",
-      "tehnomarket",
       "ananas",
     ]),
   },
@@ -529,7 +510,6 @@ const RAW_PHONES: Omit<Phone, "priceHistory">[] = [
     sellers: sellersFor(344, [
       "bhtelecom",
       "mtel",
-      "tehnomarket",
       "ananas",
       "emmezeta",
     ]),
@@ -557,7 +537,6 @@ const RAW_PHONES: Omit<Phone, "priceHistory">[] = [
     sellers: sellersFor(234, [
       "bhtelecom",
       "mtel",
-      "tehnomarket",
       "ananas",
     ]),
   },
@@ -584,7 +563,6 @@ const RAW_PHONES: Omit<Phone, "priceHistory">[] = [
     sellers: sellersFor(514, [
       "bhtelecom",
       "mtel",
-      "tehnomarket",
       "ananas",
       "hteronet",
     ]),
@@ -614,7 +592,6 @@ const RAW_PHONES: Omit<Phone, "priceHistory">[] = [
     sellers: sellersFor(674, [
       "bhtelecom",
       "mtel",
-      "tehnomarket",
       "ananas",
       "emmezeta",
     ]),
@@ -642,7 +619,6 @@ const RAW_PHONES: Omit<Phone, "priceHistory">[] = [
     sellers: sellersFor(464, [
       "bhtelecom",
       "mtel",
-      "tehnomarket",
       "ananas",
       "hteronet",
     ]),
@@ -670,7 +646,6 @@ const RAW_PHONES: Omit<Phone, "priceHistory">[] = [
     sellers: sellersFor(364, [
       "bhtelecom",
       "mtel",
-      "tehnomarket",
       "ananas",
     ]),
   },
@@ -699,7 +674,7 @@ const RAW_PHONES: Omit<Phone, "priceHistory">[] = [
     priceTrend: "pad",
     trendPercent: -4,
     popularity: 97,
-    sellers: sellersFor(2714, ["bhtelecom", "hteronet", "mtel", "tehnomarket", "ananas", "emmezeta"]),
+    sellers: sellersFor(2714, ["bhtelecom", "hteronet", "mtel", "ananas", "emmezeta"]),
   },
   {
     slug: "iphone-17",
@@ -721,7 +696,7 @@ const RAW_PHONES: Omit<Phone, "priceHistory">[] = [
     priceTrend: "stabilno",
     trendPercent: -2,
     popularity: 99,
-    sellers: sellersFor(2040, ["bhtelecom", "hteronet", "mtel", "tehnomarket", "ananas", "emmezeta"]),
+    sellers: sellersFor(2040, ["bhtelecom", "hteronet", "mtel", "ananas", "emmezeta"]),
   },
   {
     slug: "iphone-16",
@@ -743,7 +718,7 @@ const RAW_PHONES: Omit<Phone, "priceHistory">[] = [
     priceTrend: "pad",
     trendPercent: -6,
     popularity: 94,
-    sellers: sellersFor(1804, ["bhtelecom", "hteronet", "mtel", "tehnomarket", "ananas"]),
+    sellers: sellersFor(1804, ["bhtelecom", "hteronet", "mtel", "ananas"]),
   },
   {
     slug: "iphone-17e",
@@ -765,7 +740,7 @@ const RAW_PHONES: Omit<Phone, "priceHistory">[] = [
     priceTrend: "pad",
     trendPercent: -3,
     popularity: 85,
-    sellers: sellersFor(1465, ["bhtelecom", "mtel", "tehnomarket", "ananas"]),
+    sellers: sellersFor(1465, ["bhtelecom", "mtel", "ananas"]),
   },
   {
     slug: "iphone-air",
@@ -787,7 +762,7 @@ const RAW_PHONES: Omit<Phone, "priceHistory">[] = [
     priceTrend: "pad",
     trendPercent: -5,
     popularity: 88,
-    sellers: sellersFor(2614, ["bhtelecom", "hteronet", "mtel", "tehnomarket", "ananas"]),
+    sellers: sellersFor(2614, ["bhtelecom", "hteronet", "mtel", "ananas"]),
   },
   /* ------------------------------ SAMSUNG ------------------------------ */
   {
@@ -810,7 +785,7 @@ const RAW_PHONES: Omit<Phone, "priceHistory">[] = [
     priceTrend: "rast",
     trendPercent: 3,
     popularity: 95,
-    sellers: sellersFor(2214, ["bhtelecom", "hteronet", "mtel", "tehnomarket", "ananas", "emmezeta"]),
+    sellers: sellersFor(2214, ["bhtelecom", "hteronet", "mtel", "ananas", "emmezeta"]),
   },
   {
     slug: "samsung-galaxy-s26",
@@ -832,7 +807,7 @@ const RAW_PHONES: Omit<Phone, "priceHistory">[] = [
     priceTrend: "stabilno",
     trendPercent: 1,
     popularity: 93,
-    sellers: sellersFor(1814, ["bhtelecom", "hteronet", "mtel", "tehnomarket", "ananas"]),
+    sellers: sellersFor(1814, ["bhtelecom", "hteronet", "mtel", "ananas"]),
   },
   {
     slug: "samsung-galaxy-s25-ultra",
@@ -854,7 +829,7 @@ const RAW_PHONES: Omit<Phone, "priceHistory">[] = [
     priceTrend: "pad",
     trendPercent: -8,
     popularity: 91,
-    sellers: sellersFor(1814, ["bhtelecom", "hteronet", "mtel", "tehnomarket", "ananas", "emmezeta"]),
+    sellers: sellersFor(1814, ["bhtelecom", "hteronet", "mtel", "ananas", "emmezeta"]),
   },
   {
     slug: "samsung-galaxy-a57",
@@ -876,7 +851,7 @@ const RAW_PHONES: Omit<Phone, "priceHistory">[] = [
     priceTrend: "pad",
     trendPercent: -4,
     popularity: 84,
-    sellers: sellersFor(774, ["bhtelecom", "hteronet", "mtel", "tehnomarket", "ananas"]),
+    sellers: sellersFor(774, ["bhtelecom", "hteronet", "mtel", "ananas"]),
   },
   {
     slug: "samsung-galaxy-a37",
@@ -898,7 +873,7 @@ const RAW_PHONES: Omit<Phone, "priceHistory">[] = [
     priceTrend: "pad",
     trendPercent: -6,
     popularity: 82,
-    sellers: sellersFor(634, ["bhtelecom", "mtel", "tehnomarket", "ananas", "hteronet"]),
+    sellers: sellersFor(634, ["bhtelecom", "mtel", "ananas", "hteronet"]),
   },
   {
     slug: "samsung-galaxy-a27",
@@ -920,7 +895,7 @@ const RAW_PHONES: Omit<Phone, "priceHistory">[] = [
     priceTrend: "stabilno",
     trendPercent: -1,
     popularity: 76,
-    sellers: sellersFor(465, ["bhtelecom", "mtel", "tehnomarket", "ananas", "emmezeta"]),
+    sellers: sellersFor(465, ["bhtelecom", "mtel", "ananas", "emmezeta"]),
   },
   {
     slug: "samsung-galaxy-a17",
@@ -942,7 +917,7 @@ const RAW_PHONES: Omit<Phone, "priceHistory">[] = [
     priceTrend: "pad",
     trendPercent: -3,
     popularity: 80,
-    sellers: sellersFor(314, ["bhtelecom", "mtel", "tehnomarket", "ananas"]),
+    sellers: sellersFor(314, ["bhtelecom", "mtel", "ananas"]),
   },
   {
     slug: "samsung-galaxy-a07",
@@ -964,7 +939,7 @@ const RAW_PHONES: Omit<Phone, "priceHistory">[] = [
     priceTrend: "pad",
     trendPercent: -2,
     popularity: 72,
-    sellers: sellersFor(244, ["bhtelecom", "mtel", "tehnomarket", "ananas"]),
+    sellers: sellersFor(244, ["bhtelecom", "mtel", "ananas"]),
   },
   /* ------------------------------ XIAOMI ------------------------------ */
   {
@@ -987,7 +962,7 @@ const RAW_PHONES: Omit<Phone, "priceHistory">[] = [
     priceTrend: "pad",
     trendPercent: -5,
     popularity: 90,
-    sellers: sellersFor(355, ["bhtelecom", "mtel", "tehnomarket", "ananas", "hteronet"]),
+    sellers: sellersFor(355, ["bhtelecom", "mtel", "ananas", "hteronet"]),
   },
   {
     slug: "xiaomi-redmi-note-15-pro",
@@ -1009,7 +984,7 @@ const RAW_PHONES: Omit<Phone, "priceHistory">[] = [
     priceTrend: "pad",
     trendPercent: -3,
     popularity: 87,
-    sellers: sellersFor(574, ["bhtelecom", "hteronet", "mtel", "tehnomarket", "ananas"]),
+    sellers: sellersFor(574, ["bhtelecom", "hteronet", "mtel", "ananas"]),
   },
   {
     slug: "xiaomi-redmi-note-14",
@@ -1031,7 +1006,7 @@ const RAW_PHONES: Omit<Phone, "priceHistory">[] = [
     priceTrend: "pad",
     trendPercent: -7,
     popularity: 83,
-    sellers: sellersFor(375, ["bhtelecom", "mtel", "tehnomarket", "ananas"]),
+    sellers: sellersFor(375, ["bhtelecom", "mtel", "ananas"]),
   },
   {
     slug: "xiaomi-redmi-17",
@@ -1053,7 +1028,7 @@ const RAW_PHONES: Omit<Phone, "priceHistory">[] = [
     priceTrend: "pad",
     trendPercent: -2,
     popularity: 78,
-    sellers: sellersFor(364, ["bhtelecom", "mtel", "tehnomarket", "ananas"]),
+    sellers: sellersFor(364, ["bhtelecom", "mtel", "ananas"]),
   },
   {
     slug: "xiaomi-redmi-15c",
@@ -1075,7 +1050,7 @@ const RAW_PHONES: Omit<Phone, "priceHistory">[] = [
     priceTrend: "pad",
     trendPercent: -4,
     popularity: 74,
-    sellers: sellersFor(184, ["bhtelecom", "mtel", "tehnomarket", "ananas"]),
+    sellers: sellersFor(184, ["bhtelecom", "mtel", "ananas"]),
   },
   {
     slug: "xiaomi-17t",
@@ -1097,7 +1072,7 @@ const RAW_PHONES: Omit<Phone, "priceHistory">[] = [
     priceTrend: "stabilno",
     trendPercent: 0,
     popularity: 86,
-    sellers: sellersFor(1347, ["bhtelecom", "hteronet", "mtel", "tehnomarket", "ananas", "emmezeta"]),
+    sellers: sellersFor(1347, ["bhtelecom", "hteronet", "mtel", "ananas", "emmezeta"]),
   },
   /* ------------------------------ HONOR ------------------------------ */
   {
@@ -1120,7 +1095,7 @@ const RAW_PHONES: Omit<Phone, "priceHistory">[] = [
     priceTrend: "stabilno",
     trendPercent: -2,
     popularity: 85,
-    sellers: sellersFor(1014, ["bhtelecom", "hteronet", "mtel", "tehnomarket", "ananas"]),
+    sellers: sellersFor(1014, ["bhtelecom", "hteronet", "mtel", "ananas"]),
   },
   {
     slug: "honor-600-pro",
@@ -1142,7 +1117,7 @@ const RAW_PHONES: Omit<Phone, "priceHistory">[] = [
     priceTrend: "rast",
     trendPercent: 2,
     popularity: 79,
-    sellers: sellersFor(1424, ["bhtelecom", "hteronet", "mtel", "tehnomarket", "ananas"]),
+    sellers: sellersFor(1424, ["bhtelecom", "hteronet", "mtel", "ananas"]),
   },
   {
     slug: "honor-600-lite",
@@ -1164,7 +1139,7 @@ const RAW_PHONES: Omit<Phone, "priceHistory">[] = [
     priceTrend: "pad",
     trendPercent: -3,
     popularity: 77,
-    sellers: sellersFor(580, ["bhtelecom", "mtel", "tehnomarket", "ananas"]),
+    sellers: sellersFor(580, ["bhtelecom", "mtel", "ananas"]),
   },
   {
     slug: "honor-magic8-lite",
@@ -1186,7 +1161,7 @@ const RAW_PHONES: Omit<Phone, "priceHistory">[] = [
     priceTrend: "pad",
     trendPercent: -2,
     popularity: 75,
-    sellers: sellersFor(585, ["bhtelecom", "mtel", "tehnomarket", "ananas"]),
+    sellers: sellersFor(585, ["bhtelecom", "mtel", "ananas"]),
   },
   {
     slug: "honor-x7d",
@@ -1208,7 +1183,7 @@ const RAW_PHONES: Omit<Phone, "priceHistory">[] = [
     priceTrend: "stabilno",
     trendPercent: 0,
     popularity: 70,
-    sellers: sellersFor(294, ["bhtelecom", "mtel", "tehnomarket", "ananas"]),
+    sellers: sellersFor(294, ["bhtelecom", "mtel", "ananas"]),
   },
   /* ------------------------------ MOTOROLA ------------------------------ */
   {
@@ -1231,7 +1206,7 @@ const RAW_PHONES: Omit<Phone, "priceHistory">[] = [
     priceTrend: "pad",
     trendPercent: -3,
     popularity: 73,
-    sellers: sellersFor(714, ["bhtelecom", "mtel", "tehnomarket", "ananas"]),
+    sellers: sellersFor(714, ["bhtelecom", "mtel", "ananas"]),
   },
   {
     slug: "motorola-moto-g86",
@@ -1253,7 +1228,7 @@ const RAW_PHONES: Omit<Phone, "priceHistory">[] = [
     priceTrend: "stabilno",
     trendPercent: -1,
     popularity: 71,
-    sellers: sellersFor(514, ["bhtelecom", "mtel", "tehnomarket", "ananas"]),
+    sellers: sellersFor(514, ["bhtelecom", "mtel", "ananas"]),
   },
   /* ------------------------------ REALME ------------------------------ */
   {
@@ -1276,7 +1251,7 @@ const RAW_PHONES: Omit<Phone, "priceHistory">[] = [
     priceTrend: "pad",
     trendPercent: -2,
     popularity: 72,
-    sellers: sellersFor(814, ["bhtelecom", "mtel", "tehnomarket", "ananas"]),
+    sellers: sellersFor(814, ["bhtelecom", "mtel", "ananas"]),
   },
   /* ------------------------------ ONEPLUS ------------------------------ */
   {
@@ -1299,7 +1274,7 @@ const RAW_PHONES: Omit<Phone, "priceHistory">[] = [
     priceTrend: "stabilno",
     trendPercent: 0,
     popularity: 74,
-    sellers: sellersFor(714, ["bhtelecom", "mtel", "tehnomarket", "ananas"]),
+    sellers: sellersFor(714, ["bhtelecom", "mtel", "ananas"]),
   },
   {
     slug: "oneplus-nord-5",
@@ -1321,7 +1296,7 @@ const RAW_PHONES: Omit<Phone, "priceHistory">[] = [
     priceTrend: "rast",
     trendPercent: 2,
     popularity: 76,
-    sellers: sellersFor(844, ["bhtelecom", "hteronet", "mtel", "tehnomarket", "ananas"]),
+    sellers: sellersFor(844, ["bhtelecom", "hteronet", "mtel", "ananas"]),
   },
   /* ------------------------------ GOOGLE ------------------------------ */
   {
@@ -1344,7 +1319,7 @@ const RAW_PHONES: Omit<Phone, "priceHistory">[] = [
     priceTrend: "pad",
     trendPercent: -4,
     popularity: 78,
-    sellers: sellersFor(1165, ["bhtelecom", "mtel", "tehnomarket", "ananas"]),
+    sellers: sellersFor(1165, ["bhtelecom", "mtel", "ananas"]),
   },
   /* ------------------------- SAMSUNG FOLDABLE ------------------------- */
   {
@@ -1367,7 +1342,7 @@ const RAW_PHONES: Omit<Phone, "priceHistory">[] = [
     priceTrend: "stabilno",
     trendPercent: 0,
     popularity: 72,
-    sellers: sellersFor(3999, ["bhtelecom", "mtel", "tehnomarket", "ananas"]),
+    sellers: sellersFor(3999, ["bhtelecom", "mtel", "ananas"]),
   },
   {
     slug: "samsung-galaxy-z-flip-8",
@@ -1389,7 +1364,7 @@ const RAW_PHONES: Omit<Phone, "priceHistory">[] = [
     priceTrend: "stabilno",
     trendPercent: 0,
     popularity: 64,
-    sellers: sellersFor(2799, ["bhtelecom", "mtel", "tehnomarket", "ananas"]),
+    sellers: sellersFor(2799, ["bhtelecom", "mtel", "ananas"]),
   },
   /* ------------------------------ XIAOMI ------------------------------ */
   {
@@ -1412,7 +1387,7 @@ const RAW_PHONES: Omit<Phone, "priceHistory">[] = [
     priceTrend: "stabilno",
     trendPercent: 0,
     popularity: 86,
-    sellers: sellersFor(275, ["bhtelecom", "mtel", "tehnomarket", "ananas"]),
+    sellers: sellersFor(275, ["bhtelecom", "mtel", "ananas"]),
   },
   {
     slug: "xiaomi-poco-m7",
@@ -1434,7 +1409,7 @@ const RAW_PHONES: Omit<Phone, "priceHistory">[] = [
     priceTrend: "stabilno",
     trendPercent: 0,
     popularity: 74,
-    sellers: sellersFor(289, ["bhtelecom", "mtel", "tehnomarket", "ananas"]),
+    sellers: sellersFor(289, ["bhtelecom", "mtel", "ananas"]),
   },
   {
     slug: "xiaomi-poco-x8-pro",
@@ -1456,7 +1431,7 @@ const RAW_PHONES: Omit<Phone, "priceHistory">[] = [
     priceTrend: "stabilno",
     trendPercent: 0,
     popularity: 77,
-    sellers: sellersFor(1249, ["bhtelecom", "mtel", "tehnomarket", "ananas"]),
+    sellers: sellersFor(1249, ["bhtelecom", "mtel", "ananas"]),
   },
   /* ----------------------------- MOTOROLA ----------------------------- */
   {
@@ -1479,7 +1454,7 @@ const RAW_PHONES: Omit<Phone, "priceHistory">[] = [
     priceTrend: "stabilno",
     trendPercent: 0,
     popularity: 70,
-    sellers: sellersFor(699, ["bhtelecom", "mtel", "tehnomarket", "ananas"]),
+    sellers: sellersFor(699, ["bhtelecom", "mtel", "ananas"]),
   },
   {
     slug: "motorola-moto-g05",
@@ -1501,7 +1476,7 @@ const RAW_PHONES: Omit<Phone, "priceHistory">[] = [
     priceTrend: "stabilno",
     trendPercent: 0,
     popularity: 66,
-    sellers: sellersFor(189, ["bhtelecom", "mtel", "tehnomarket", "ananas"]),
+    sellers: sellersFor(189, ["bhtelecom", "mtel", "ananas"]),
   },
 ];
 
