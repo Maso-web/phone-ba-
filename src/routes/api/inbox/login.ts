@@ -37,7 +37,10 @@ export const Route = createFileRoute("/api/inbox/login")({
           return json(
             {
               ok: false,
-              error: "Previše pokušaja. Pokušaj ponovo kasnije.",
+              error: `Previše pokušaja za redom. Sačekajte ${Math.max(
+                1,
+                Math.ceil(limit.retryAfterSec / 60),
+              )} min pa probajte ponovo.`,
               retryAfterSec: limit.retryAfterSec,
             },
             429,

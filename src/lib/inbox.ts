@@ -438,7 +438,7 @@ export function expiredCookie(): string {
  * ------------------------------------------------------------------ */
 
 const WINDOW_MS = 15 * 60 * 1000;
-const MAX_ATTEMPTS = 5;
+const MAX_ATTEMPTS = 10;
 const attempts = new Map<string, number[]>();
 
 export function clientIp(request: Request): string {
