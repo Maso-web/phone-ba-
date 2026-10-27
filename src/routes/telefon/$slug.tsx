@@ -13,10 +13,16 @@ import { AvailabilityBadge, DemoNote, TagPill, TrendBadge } from "~/components/B
 import { SponsoredCard } from "~/components/SponsoredCard";
 import { OlxPricesSection } from "~/components/OlxPricesSection";
 import { CompatibleGadgets } from "~/components/CompatibleGadgets";
+import { RelatedModels } from "~/components/RelatedModels";
 import { ShopPricesSection } from "~/components/ShopPricesSection";
 import { getOlxPrices } from "~/data/olx_prices";
 import { getShopPrices } from "~/data/shop_prices";
 import { getPhonePageOffer } from "~/data/sponsored";
+import {
+  breadcrumbLd,
+  phoneDescription,
+  phoneTitle,
+} from "~/lib/seo";
 
 export const Route = createFileRoute("/telefon/$slug")({
   head: ({ params }) => {
@@ -24,26 +30,29 @@ export const Route = createFileRoute("/telefon/$slug")({
     return {
       meta: phone
         ? [
-            {
-              title: `${phone.name} — cijena u BiH, ponude i specifikacije | phone.ba`,
-            },
-            {
-              name: "description",
-              content: `${phone.name} — uporedi cijene u KM kod BH Telecom, HT Eronet, m:tel i trgovina. Specifikacije, kamera, baterija i gdje je najjeftinije kupiti u BiH.`,
-            },
+            { title: phoneTitle(phone) },
+            { name: "description", content: phoneDescription(phone) },
             { property: "og:url", content: `https://phone.ba/telefon/${phone.slug}` },
-            {
-              property: "og:title",
-              content: `${phone.name} — cijena u BiH, ponude i specifikacije | phone.ba`,
-            },
-            {
-              property: "og:description",
-              content: `${phone.name} — uporedi cijene u KM kod BH Telecom, HT Eronet, m:tel i trgovina. Specifikacije i gdje je najjeftinije kupiti u BiH.`,
-            },
+            { property: "og:title", content: phoneTitle(phone) },
+            { property: "og:description", content: phoneDescription(phone) },
           ]
         : [{ title: "Telefon nije pronađen | phone.ba" }],
       links: phone
         ? [{ rel: "canonical", href: `https://phone.ba/telefon/${phone.slug}` }]
+        : [],
+      scripts: phone
+        ? [
+            {
+              type: "application/ld+json",
+              children: JSON.stringify(
+                breadcrumbLd([
+                  { name: "Početna", path: "/" },
+                  { name: "Telefoni", path: "/telefoni" },
+                  { name: phone.name },
+                ]),
+              ),
+            },
+          ]
         : [],
     };
   },
@@ -315,6 +324,9 @@ function PhoneDetail() {
           ))}
         </ul>
       </section>
+
+      {/* Interni linkovi: slični modeli + vodiči za kupovinu */}
+      <RelatedModels phone={phone} />
 
       {/* Cross-selling: gadžeti koji odgovaraju brendu telefona */}
       <CompatibleGadgets phone={phone} />

@@ -18,19 +18,25 @@ import { DemoNote } from "~/components/Badges";
 import { SponsoredCard } from "~/components/SponsoredCard";
 import { getCatalogBannerOffer } from "~/data/sponsored";
 import { track } from "~/lib/analytics";
+import { breadcrumbLd } from "~/lib/seo";
 
 export const Route = createFileRoute("/telefoni")({
   validateSearch: (search) => normalizeCatalogSearch(search),
   head: () => ({
     meta: [
-      { title: "Telefoni — cijene i poređenje u BiH | phone.ba" },
+      {
+        title: `Poređenje cijena telefona u BiH — ${phones.length} modela | phone.ba`,
+      },
       {
         name: "description",
         content:
-          "Svi modeli telefona sa cijenama u KM. Filtriranje po brendu, budžetu i funkciji (kamera, baterija, gaming). Najbolja cijena u BiH na jednom mjestu.",
+          `Sve cijene telefona u BiH na jednom mjestu: ${phones.length} modela u KM, filteri po brendu, budžetu i funkciji (kamera, baterija, gaming) i linkovi na ponude.`,
       },
       { property: "og:url", content: "https://phone.ba/telefoni" },
-      { property: "og:title", content: "Telefoni — cijene i poređenje u BiH | phone.ba" },
+      {
+        property: "og:title",
+        content: `Poređenje cijena telefona u BiH — ${phones.length} modela | phone.ba`,
+      },
       {
         property: "og:description",
         content:
@@ -39,6 +45,15 @@ export const Route = createFileRoute("/telefoni")({
     ],
     links: [{ rel: "canonical", href: "https://phone.ba/telefoni" }],
     scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify(
+          breadcrumbLd([
+            { name: "Početna", path: "/" },
+            { name: "Telefoni" },
+          ]),
+        ),
+      },
       {
         type: "application/ld+json",
         children: JSON.stringify({

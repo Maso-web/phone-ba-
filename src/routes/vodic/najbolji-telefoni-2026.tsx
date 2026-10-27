@@ -3,19 +3,17 @@ import type { ReactNode } from "react";
 import { phones, type Phone } from "~/data/phones";
 import { SHOP_SCRAPE_DATE } from "~/data/shop_prices";
 import { effectiveMinOf, formatKM, hasRealPrice } from "~/lib/catalog";
+import { breadcrumbLd } from "~/lib/seo";
 import { PhoneCard } from "~/components/PhoneCard";
 
 export const Route = createFileRoute("/vodic/najbolji-telefoni-2026")({
   head: () => ({
     meta: [
-      {
-        title:
-          "Najbolji telefoni 2026 — preporuke po kategorijama u BiH | phone.ba",
-      },
+      { title: "Najbolji telefoni 2026. u BiH — po kategorijama | phone.ba" },
       {
         name: "description",
         content:
-          "Najbolji telefoni 2026. godine po kategorijama: flagship, sklopivi, kamera, gaming, baterija i budžet — iz kataloga phone.ba, sa stvarnim cijenama u KM iz BH online shopova.",
+          "Najbolji telefoni 2026. u BiH po kategorijama: flagship, sklopivi, kamera, gaming, baterija i budžet — cijene u KM iz BH online shopova i česta pitanja.",
       },
       {
         property: "og:url",
@@ -23,19 +21,27 @@ export const Route = createFileRoute("/vodic/najbolji-telefoni-2026")({
       },
       {
         property: "og:title",
-        content:
-          "Najbolji telefoni 2026 — preporuke po kategorijama u BiH | phone.ba",
+        content: "Najbolji telefoni 2026. u BiH — po kategorijama | phone.ba",
       },
       {
         property: "og:description",
         content:
-          "Preporuke po kategorijama sa stvarnim cijenama u KM iz BH online shopova — flagship, sklopivi, kamera, gaming, baterija i budžet.",
+          "Preporuke po kategorijama sa cijenama u KM iz BH online shopova — flagship, sklopivi, kamera, gaming, baterija i budžet.",
       },
     ],
     links: [
       { rel: "canonical", href: "https://phone.ba/vodic/najbolji-telefoni-2026" },
     ],
     scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify(
+          breadcrumbLd([
+            { name: "Početna", path: "/" },
+            { name: "Najbolji telefoni 2026." },
+          ]),
+        ),
+      },
       {
         type: "application/ld+json",
         children: JSON.stringify({
@@ -117,6 +123,18 @@ function NajboljiTelefoni2026() {
 
   return (
     <main className="container-site pb-16 pt-10 lg:pb-24 lg:pt-14">
+      {/* Breadcrumb */}
+      <nav
+        aria-label="Putanja"
+        className="mb-6 flex flex-wrap items-center gap-1.5 text-[12.5px] text-slate-500"
+      >
+        <Link to="/" className="transition-colors hover:text-white">
+          Početna
+        </Link>
+        <span aria-hidden>/</span>
+        <span className="font-medium text-slate-300">Najbolji telefoni 2026.</span>
+      </nav>
+
       {/* Zaglavlje */}
       <div className="animate-fade-up">
         <p className="pill pill-green mb-3">Vodič za kupovinu · 2026</p>

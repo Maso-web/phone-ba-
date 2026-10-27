@@ -12,6 +12,7 @@ import {
 import { GadgetCard } from "~/components/GadgetCard";
 import { GadgetIcon } from "~/components/GadgetVisual";
 import { GadgetNote } from "~/components/GadgetNote";
+import { breadcrumbLd } from "~/lib/seo";
 
 /** Filter rubrike: `?kategorija=pametni_satovi` (nepoznato se ignorira) */
 export interface GadzetiSearch {
@@ -27,21 +28,32 @@ export const Route = createFileRoute("/gadzeti")({
   },
   head: () => ({
     meta: [
-      { title: "Gadžeti — pametni satovi, slušalice i oprema | phone.ba" },
+      { title: "Gadžeti u BiH — satovi, slušalice i oprema | phone.ba" },
       {
         name: "description",
         content:
-          "Pametni satovi, bežične slušalice, narukvice i power bankovi u BiH — uporedi stvarne cijene iz BH online shopova u KM.",
+          "Pametni satovi, bežične slušalice, narukvice i power bankovi u BiH — uporedi cijene u KM iz BH online shopova i telekom ponuda na jednom mjestu.",
       },
       { property: "og:url", content: "https://phone.ba/gadzeti" },
-      { property: "og:title", content: "Gadžeti — pametni satovi, slušalice i oprema | phone.ba" },
+      { property: "og:title", content: "Gadžeti u BiH — satovi, slušalice i oprema | phone.ba" },
       {
         property: "og:description",
         content:
-          "Pametni satovi, bežične slušalice, narukvice i power bankovi u BiH — uporedi stvarne cijene iz BH online shopova u KM.",
+          "Pametni satovi, bežične slušalice, narukvice i power bankovi u BiH — uporedi cijene u KM iz BH online shopova i telekom ponuda.",
       },
     ],
     links: [{ rel: "canonical", href: "https://phone.ba/gadzeti" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify(
+          breadcrumbLd([
+            { name: "Početna", path: "/" },
+            { name: "Gadžeti" },
+          ]),
+        ),
+      },
+    ],
   }),
   component: Gadzeti,
 });

@@ -1,6 +1,7 @@
 import { Link, createFileRoute, notFound } from "@tanstack/react-router";
 import {
   getGadget,
+  gadgets,
   minGadgetPrice,
   realOfferCount,
   sortedGadgetSellers,
@@ -8,12 +9,12 @@ import {
 } from "~/data/gadgets";
 import { GADGET_CATEGORY_LABELS, specRows } from "~/lib/gadgetSpecs";
 import { BRAND_LABELS, BRAND_SLUGS, formatKM, trendArrow } from "~/lib/catalog";
+import { breadcrumbLd, gadgetDescription, gadgetTitle } from "~/lib/seo";
 import type { BrandSlug } from "~/data/phones";
 import { TrendBadge } from "~/components/Badges";
 import { GadgetIcon, GadgetVisual } from "~/components/GadgetVisual";
 import { GadgetNote } from "~/components/GadgetNote";
 import { GadgetCard } from "~/components/GadgetCard";
-import { gadgetsByCategory } from "~/data/gadgets";
 
 export const Route = createFileRoute("/gadzet/$slug")({
   head: ({ params }) => {
@@ -21,15 +22,30 @@ export const Route = createFileRoute("/gadzet/$slug")({
     return {
       meta: gadget
         ? [
-            {
-              title: `${gadget.name} — cijene u BiH i specifikacije | phone.ba`,
-            },
-            {
-              name: "description",
-              content: `${gadget.name}: ${gadget.tagline} Uporedi cijene u KM u BH online shopovima.`,
-            },
+            { title: gadgetTitle(gadget) },
+            { name: "description", content: gadgetDescription(gadget) },
+            { property: "og:url", content: `https://phone.ba/gadzet/${gadget.slug}` },
+            { property: "og:title", content: gadgetTitle(gadget) },
+            { property: "og:description", content: gadgetDescription(gadget) },
           ]
         : [{ title: "Gadžet nije pronađen | phone.ba" }],
+      links: gadget
+        ? [{ rel: "canonical", href: `https://phone.ba/gadzet/${gadget.slug}` }]
+        : [],
+      scripts: gadget
+        ? [
+            {
+              type: "application/ld+json",
+              children: JSON.stringify(
+                breadcrumbLd([
+                  { name: "Početna", path: "/" },
+                  { name: "Gadžeti", path: "/gadzeti" },
+                  { name: gadget.name },
+                ]),
+              ),
+            },
+          ]
+        : [],
     };
   },
   component: GadgetDetail,
@@ -92,10 +108,25 @@ function GadgetDetail() {
   const isDemo = Boolean(cheapest?.demo);
   const rows = specRows(gadget.category, gadget.specs);
   const phoneBrandSlug = GADGET_BRAND_TO_PHONE[gadget.brand.toLowerCase()];
-  const slicno = gadgetsByCategory(gadget.category)
-    .filter((g) => g.slug !== gadget.slug)
-    .sort((a, b) => minGadgetPrice(a) - minGadgetPrice(b))
-    .slice(0, 3);
+  /**
+   * "Slično" — susjedi u cjenovnom prstenu cijelog kataloga gadžeta. Prsten
+   * garantuje da svaki gadžet dobije interne linkove sa drugih stranica
+   * (nijedna stranica iz sitemapa ne ostaje bez linka).
+   */
+  const prsten = [...gadgets].sort(
+    (a, b) => minGadgetPrice(a) - minGadgetPrice(b),
+  );
+  const gIdx = prsten.findIndex((g) => g.slug === gadget.slug);
+  const slicno: Gadget[] = [];
+  for (let korak = 1; korak <= 4 && slicno.length < 3; korak++) {
+    for (const smjer of [1, -1]) {
+      const g = prsten[(gIdx + smjer * korak + prsten.length) % prsten.length];
+      if (g && g.slug !== gadget.slug && !slicno.some((s) => s.slug === g.slug)) {
+        slicno.push(g);
+      }
+      if (slicno.length >= 3) break;
+    }
+  }
 
   return (
     <main className="container-site pb-16 pt-8 lg:pb-24">

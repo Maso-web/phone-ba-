@@ -2,36 +2,42 @@ import { Link, createFileRoute } from "@tanstack/react-router";
 import { phones, type Phone } from "~/data/phones";
 import { SHOP_SCRAPE_DATE } from "~/data/shop_prices";
 import { effectiveMinOf, formatKM, hasRealPrice } from "~/lib/catalog";
+import { breadcrumbLd } from "~/lib/seo";
 import { PhoneCard } from "~/components/PhoneCard";
 
 export const Route = createFileRoute("/vodic/budzet-telefoni")({
   head: () => ({
     meta: [
-      {
-        title:
-          "Budžet telefoni — najbolji jeftini telefoni u BiH (stvarne cijene) | phone.ba",
-      },
+      { title: "Najbolji jeftini telefoni u BiH — do 400 KM | phone.ba" },
       {
         name: "description",
         content:
-          "Koji jeftini telefon kupiti u BiH 2026? Najbolji budžetski modeli iz našeg kataloga — Redmi 15, POCO M7, Moto G05 — sa stvarnim cijenama u KM iz BH online shopova i savjetima prije kupovine.",
+          "Koji jeftini telefon kupiti u BiH? Modeli do 400 KM iz kataloga phone.ba sa cijenama u KM iz BH online shopova, specifikacije i savjeti prije kupovine.",
       },
       { property: "og:url", content: "https://phone.ba/vodic/budzet-telefoni" },
       {
         property: "og:title",
-        content:
-          "Budžet telefoni — najbolji jeftini telefoni u BiH (stvarne cijene) | phone.ba",
+        content: "Najbolji jeftini telefoni u BiH — do 400 KM | phone.ba",
       },
       {
         property: "og:description",
         content:
-          "Najbolji budžetski modeli sa stvarnim cijenama u KM iz BH online shopova i savjetima prije kupovine.",
+          "Najbolji budžetski modeli sa cijenama u KM iz BH online shopova i savjetima prije kupovine.",
       },
     ],
     links: [
       { rel: "canonical", href: "https://phone.ba/vodic/budzet-telefoni" },
     ],
     scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify(
+          breadcrumbLd([
+            { name: "Početna", path: "/" },
+            { name: "Najbolji jeftini telefoni do 400 KM" },
+          ]),
+        ),
+      },
       {
         type: "application/ld+json",
         children: JSON.stringify({
@@ -66,6 +72,20 @@ function BudzetTelefoni() {
 
   return (
     <main className="container-site pb-16 pt-10 lg:pb-24 lg:pt-14">
+      {/* Breadcrumb */}
+      <nav
+        aria-label="Putanja"
+        className="mb-6 flex flex-wrap items-center gap-1.5 text-[12.5px] text-slate-500"
+      >
+        <Link to="/" className="transition-colors hover:text-white">
+          Početna
+        </Link>
+        <span aria-hidden>/</span>
+        <span className="font-medium text-slate-300">
+          Najbolji jeftini telefoni do 400 KM
+        </span>
+      </nav>
+
       {/* Zaglavlje */}
       <div className="animate-fade-up">
         <p className="pill pill-green mb-3">Vodič za kupovinu</p>

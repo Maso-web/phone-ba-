@@ -2,26 +2,41 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { CITIES, CITY_LABELS, OLX_SCRAPE_DATE, services } from "~/data/services";
 import type { CitySlug, ServiceType } from "~/data/services";
 import { formatKM } from "~/lib/catalog";
+import { breadcrumbLd } from "~/lib/seo";
 
 export const Route = createFileRoute("/servisi")({
   validateSearch: (search) => normalizeServicesSearch(search),
   head: () => ({
     meta: [
-      { title: "Servisi i Oprema — imenik u tvom gradu | phone.ba" },
+      { title: "Servis telefona u BiH — imenik po gradovima | phone.ba" },
       {
         name: "description",
         content:
-          "Imenik servisa za popravku telefona i prodavnica opreme iz cijele Bosne i Hercegovine — stvarni poslovni oglasi sa OLX.ba na jednom mjestu.",
+          "Imenik servisa za popravku telefona i prodavnica opreme u Sarajevu, Banja Luci, Mostaru, Tuzli i Zenici — kontakti iz poslovnih oglasa na OLX.ba.",
       },
       { property: "og:url", content: "https://phone.ba/servisi" },
-      { property: "og:title", content: "Servisi i Oprema — imenik u tvom gradu | phone.ba" },
+      {
+        property: "og:title",
+        content: "Servis telefona u BiH — imenik po gradovima | phone.ba",
+      },
       {
         property: "og:description",
         content:
-          "Imenik servisa za popravku telefona i prodavnica opreme iz cijele Bosne i Hercegovine — stvarni poslovni oglasi sa OLX.ba na jednom mjestu.",
+          "Imenik servisa za popravku telefona i prodavnica opreme u Sarajevu, Banja Luci, Mostaru, Tuzli i Zenici — kontakti iz poslovnih oglasa na OLX.ba.",
       },
     ],
     links: [{ rel: "canonical", href: "https://phone.ba/servisi" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify(
+          breadcrumbLd([
+            { name: "Početna", path: "/" },
+            { name: "Servisi i oprema" },
+          ]),
+        ),
+      },
+    ],
   }),
   component: Servisi,
 });

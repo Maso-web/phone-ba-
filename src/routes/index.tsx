@@ -6,67 +6,28 @@ import { PhoneVisual } from "~/components/PhoneVisual";
 import { SearchBox } from "~/components/SearchBox";
 import { InsightsSection } from "~/components/InsightsSection";
 import { SponsoredCard } from "~/components/SponsoredCard";
+import { PopularSearches } from "~/components/PopularSearches";
+import { organizationLd, websiteLd } from "~/lib/seo";
 import { getHomeOffer } from "~/data/sponsored";
+
+const HOME_TITLE = "Cijene telefona u BiH — poređenje u KM | phone.ba";
+const HOME_DESC =
+  "Poređenje cijena telefona u BiH na jednom mjestu: BH Telecom, HT Eronet, m:tel, BH online shopovi i OLX.ba. AI preporuka za tvoj budžet, cijene u KM.";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      {
-        title: "phone.ba — AI poređenje cijena telefona u BiH",
-      },
-      {
-        name: "description",
-        content:
-          "Usporedi cijene telefona u BiH na jednom mjestu — BH Telecom, HT Eronet, m:tel i lokalne trgovine. AI preporuke, cijene u KM, servisi i oprema.",
-      },
+      { title: HOME_TITLE },
+      { name: "description", content: HOME_DESC },
       { property: "og:url", content: "https://phone.ba/" },
-      {
-        property: "og:title",
-        content: "phone.ba — AI poređenje cijena telefona u BiH",
-      },
-      {
-        property: "og:description",
-        content:
-          "Usporedi cijene telefona u BiH na jednom mjestu — BH Telecom, HT Eronet, m:tel i lokalne trgovine. AI preporuke, cijene u KM.",
-      },
+      { property: "og:title", content: HOME_TITLE },
+      { property: "og:description", content: HOME_DESC },
       { name: "twitter:url", content: "https://phone.ba/" },
     ],
     links: [{ rel: "canonical", href: "https://phone.ba/" }],
     scripts: [
-      {
-        type: "application/ld+json",
-        children: JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "WebSite",
-          name: "phone.ba",
-          alternateName: "AI agregator cijena telefona u BiH",
-          url: "https://phone.ba/",
-          inLanguage: "bs",
-          publisher: {
-            "@type": "Organization",
-            name: "phone.ba",
-            url: "https://phone.ba/",
-            logo: { "@type": "ImageObject", url: "https://phone.ba/logo-512.png" },
-          },
-        }),
-      },
-      {
-        type: "application/ld+json",
-        children: JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "Organization",
-          name: "phone.ba",
-          url: "https://phone.ba/",
-          email: "hello@phone.ba",
-          address: { "@type": "PostalAddress", addressCountry: "BA" },
-          contactPoint: {
-            "@type": "ContactPoint",
-            email: "hello@phone.ba",
-            contactType: "customer support",
-            availableLanguage: ["bs"],
-          },
-        }),
-      },
+      { type: "application/ld+json", children: JSON.stringify(websiteLd) },
+      { type: "application/ld+json", children: JSON.stringify(organizationLd) },
     ],
   }),
   component: Home,
@@ -288,6 +249,11 @@ function Home() {
       {/* Smart Insights — trendovi cijena (Faza 2A)                  */}
       {/* ---------------------------------------------------------- */}
       <InsightsSection />
+
+      {/* ---------------------------------------------------------- */}
+      {/* Popularne pretrage — interni linkovi ka filterima            */}
+      {/* ---------------------------------------------------------- */}
+      <PopularSearches />
 
       {/* ---------------------------------------------------------- */}
       {/* CTA traka                                                   */}
