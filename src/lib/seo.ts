@@ -145,6 +145,22 @@ export function gadgetDescription(gadget: Gadget): string {
 }
 
 /* ------------------------------------------------------------------ */
+/* Hub stranica vodiča (/vodic)                                        */
+/* ------------------------------------------------------------------ */
+
+/** Naslov hub stranice vodiča — ≤ 60 znakova, jedinstven u odnosu na vodiče. */
+export const VODIC_HUB_TITLE = clip(
+  `Vodiči za kupovinu telefona u BiH | ${SITE_NAME}`,
+  60,
+);
+
+/** Opis hub stranice vodiča — svi vodiči na jednom mjestu, bez izmišljenih tvrdnji. */
+export const VODIC_HUB_DESCRIPTION = clip(
+  "Svi vodiči phone.ba na jednom mjestu: najbolji telefoni 2026. po kategorijama i najbolji jeftini telefoni do 400 KM, sa stvarnim cijenama u KM iz BH online shopova.",
+  158,
+);
+
+/* ------------------------------------------------------------------ */
 /* Slični modeli (interni linkovi sa stranice modela)                  */
 /* ------------------------------------------------------------------ */
 

@@ -5,6 +5,50 @@ import { effectiveMinOf, formatKM, hasRealPrice } from "~/lib/catalog";
 import { breadcrumbLd } from "~/lib/seo";
 import { PhoneCard } from "~/components/PhoneCard";
 
+/**
+ * Česta pitanja — JEDAN izvor istine: isti niz puni i vidljivi blok
+ * (naslov „Česta pitanja") i FAQPage JSON-LD, pa se tekst poklapa 1:1.
+ * Svaki odgovor je izveden iz sadržaja OVE stranice (savjeti, lista modela,
+ * način prikupljanja cijena) — bez izmišljenih brojki.
+ */
+const CESTA_PITANJA: { pitanje: string; odgovor: string }[] = [
+  {
+    pitanje: "Koji budžet je dovoljan za pristojan telefon u BiH?",
+    odgovor:
+      "Ovaj vodič pokriva modele ispod 400 KM, jer se u tom rasponu u BiH već prodaju telefoni s baterijom od 5000 mAh i više i kamerom od 50 MP, a 6 GB RAM-a je naša preporuka za ugodan rad. Lista je sortirana od najniže stvarne cijene prema višoj, pa je na vrhu najjeftiniji model iz kataloga.",
+  },
+  {
+    pitanje: "Koliko RAM memorije mi treba?",
+    odgovor:
+      "Preporuka je 6 GB RAM-a, jer današnje aplikacije i sistem troše više memorije nego prije. 4 GB je dovoljno samo za osnovno korištenje, pa ako telefon planiraš koristiti duže, bolje je uzeti model sa 6 GB ili više.",
+  },
+  {
+    pitanje: "Kolika baterija je dovoljna za svakodnevnu upotrebu?",
+    odgovor:
+      "Baterija od 5000 mAh i više znači dan-dva rada bez punjača. U katalogu ima i modela sa 7000 mAh (Redmi 15, POCO M7), koji prema specifikacijama prodavača idu i dalje od toga.",
+  },
+  {
+    pitanje: "Da li se isplati kupiti polovan telefon?",
+    odgovor:
+      "Ovaj vodič se zasniva na ponudama BH online prodavnica, gdje uz telefon ide domaća garancija. Ako razmatraš polovan uređaj, provjeri da li uz njega dobijaš garanciju — jeftinija ponuda bez garancije može koštati više ako nastane problem.",
+  },
+  {
+    pitanje: "Koje marke su najzastupljenije do 400 KM?",
+    odgovor:
+      "Najviše je Xiaomi modela — Redmi 15, Redmi 15c, Redmi 17, Redmi Note 14, Redmi Note 15 i POCO M7. U listi su i Samsung Galaxy A07 i A17, Honor X7d te Motorola Moto G05, pa se može birati i kad tražiš poznatu marku.",
+  },
+  {
+    pitanje: "Šta je najvažnije provjeriti prije kupovine?",
+    odgovor:
+      "Proizvođači kod jeftinijih modela najčešće štede na kameri, ekranu i brzini punjenja. Zato provjeri bateriju, RAM i frekvenciju osvježavanja ekrana, a zatim i koliko godina softverske podrške proizvođač obećava.",
+  },
+  {
+    pitanje: "Odakle su cijene u ovom vodiču i da li su rangirane po plaćanju?",
+    odgovor:
+      "Cijene se prikupljaju automatski iz BH online prodavnica i nose datum snapshot-a naveden na stranici. Na stranici svakog modela vidiš tačan broj ponuda i prodavnicu s najnižom cijenom, a sponzorisane pozicije ne utiču na rangiranje u ovom vodiču.",
+  },
+];
+
 export const Route = createFileRoute("/vodic/budzet-telefoni")({
   head: () => ({
     meta: [
@@ -34,9 +78,22 @@ export const Route = createFileRoute("/vodic/budzet-telefoni")({
         children: JSON.stringify(
           breadcrumbLd([
             { name: "Početna", path: "/" },
+            { name: "Vodiči", path: "/vodic" },
             { name: "Najbolji jeftini telefoni do 400 KM" },
           ]),
         ),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: CESTA_PITANJA.map((f) => ({
+            "@type": "Question",
+            name: f.pitanje,
+            acceptedAnswer: { "@type": "Answer", text: f.odgovor },
+          })),
+        }),
       },
       {
         type: "application/ld+json",
@@ -79,6 +136,10 @@ function BudzetTelefoni() {
       >
         <Link to="/" className="transition-colors hover:text-white">
           Početna
+        </Link>
+        <span aria-hidden>/</span>
+        <Link to="/vodic" className="transition-colors hover:text-white">
+          Vodiči
         </Link>
         <span aria-hidden>/</span>
         <span className="font-medium text-slate-300">
@@ -194,6 +255,27 @@ function BudzetTelefoni() {
           karakteristika — nikakve sponzorisane pozicije ne utiču na
           rangiranje u ovom vodiču.
         </p>
+      </section>
+
+      {/* Česta pitanja — vidljivi tekst; FAQPage JSON-LD iz istog niza */}
+      <section className="mt-10" id="cesta-pitanja">
+        <h2 className="text-xl font-bold text-white">Česta pitanja</h2>
+        <p className="mt-1 max-w-3xl text-[13.5px] leading-relaxed text-slate-400">
+          Kratki odgovori na ono što se najčešće pita prije kupovine telefona do
+          400 KM.
+        </p>
+        <div className="mt-5 space-y-4">
+          {CESTA_PITANJA.map((f) => (
+            <div key={f.pitanje} className="surface-card p-4 sm:p-5">
+              <h3 className="text-[14.5px] font-bold text-white">
+                {f.pitanje}
+              </h3>
+              <p className="mt-1.5 text-[13px] leading-relaxed text-slate-400">
+                {f.odgovor}
+              </p>
+            </div>
+          ))}
+        </div>
       </section>
 
       {/* Cross-sell */}

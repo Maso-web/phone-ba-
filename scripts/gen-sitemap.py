@@ -76,6 +76,11 @@ def main() -> None:
     urls.append((f"{SITE}/servisi", lastmod(["src/data/services.ts", "src/routes/servisi.tsx"]), "weekly", "0.7"))
     urls.append((f"{SITE}/gadzeti", lastmod(["src/data/gadgets.ts", "src/routes/gadzeti.tsx"]), "weekly", "0.7"))
     urls.append((
+        f"{SITE}/vodic",
+        lastmod(["src/routes/vodic/index.tsx", "src/data/vodic.ts"]),
+        "weekly", "0.7",
+    ))
+    urls.append((
         f"{SITE}/vodic/najbolji-telefoni-2026",
         lastmod(["src/routes/vodic/najbolji-telefoni-2026.tsx", "src/data/shop_prices.ts"]),
         "weekly", "0.7",

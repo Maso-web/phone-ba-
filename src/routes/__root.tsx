@@ -129,7 +129,7 @@ function NavItem({
   exact = false,
   children,
 }: {
-  to: "/" | "/telefoni" | "/gadzeti" | "/servisi";
+  to: "/" | "/telefoni" | "/gadzeti" | "/vodic" | "/servisi";
   exact?: boolean;
   children: ReactNode;
 }) {
@@ -182,7 +182,7 @@ function SiteNav() {
           </NavItem>
           <NavItem to="/telefoni">Telefoni</NavItem>
           <NavItem to="/gadzeti">Gadžeti</NavItem>
-          <NavItem to="/vodic/najbolji-telefoni-2026">Vodiči</NavItem>
+          <NavItem to="/vodic">Vodiči</NavItem>
           <NavItem to="/servisi">Servisi i Oprema</NavItem>
         </nav>
 
@@ -270,7 +270,7 @@ function SiteNav() {
               Gadžeti
             </Link>
             <Link
-              to="/vodic/najbolji-telefoni-2026"
+              to="/vodic"
               onClick={() => setMenuOpen(false)}
               className="rounded-lg px-3 py-2.5 text-[15px] font-medium text-slate-300 transition-colors hover:bg-white/[0.06] hover:text-white"
             >

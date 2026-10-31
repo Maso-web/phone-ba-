@@ -38,6 +38,7 @@ export const Route = createFileRoute("/vodic/najbolji-telefoni-2026")({
         children: JSON.stringify(
           breadcrumbLd([
             { name: "Početna", path: "/" },
+            { name: "Vodiči", path: "/vodic" },
             { name: "Najbolji telefoni 2026." },
           ]),
         ),
@@ -130,6 +131,10 @@ function NajboljiTelefoni2026() {
       >
         <Link to="/" className="transition-colors hover:text-white">
           Početna
+        </Link>
+        <span aria-hidden>/</span>
+        <Link to="/vodic" className="transition-colors hover:text-white">
+          Vodiči
         </Link>
         <span aria-hidden>/</span>
         <span className="font-medium text-slate-300">Najbolji telefoni 2026.</span>
