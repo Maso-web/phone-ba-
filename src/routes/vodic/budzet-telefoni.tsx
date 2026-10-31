@@ -1,6 +1,5 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { phones, type Phone } from "~/data/phones";
-import { SHOP_SCRAPE_DATE } from "~/data/shop_prices";
 import { effectiveMinOf, formatKM, hasRealPrice } from "~/lib/catalog";
 import { breadcrumbLd } from "~/lib/seo";
 import { PhoneCard } from "~/components/PhoneCard";
@@ -45,7 +44,7 @@ const CESTA_PITANJA: { pitanje: string; odgovor: string }[] = [
   {
     pitanje: "Odakle su cijene u ovom vodiču i da li su rangirane po plaćanju?",
     odgovor:
-      "Cijene se prikupljaju automatski iz BH online prodavnica i nose datum snapshot-a naveden na stranici. Na stranici svakog modela vidiš tačan broj ponuda i prodavnicu s najnižom cijenom, a sponzorisane pozicije ne utiču na rangiranje u ovom vodiču.",
+      "Cijene se prikupljaju automatski iz BH online prodavnica. Na stranici svakog modela vidiš tačan broj ponuda i prodavnicu s najnižom cijenom, a sponzorisane pozicije ne utiču na rangiranje u ovom vodiču.",
   },
 ];
 
@@ -157,7 +156,7 @@ function BudzetTelefoni() {
           Dobar telefon ne mora koštati bogatstvo. U ovom vodiču izdvajamo
           modele iz našeg kataloga koji se u BiH stvarno prodaju, s
           najpovoljnijim cijenama ispod 400 KM — cijene su aktuelne iz BH
-          online shopova (snapshot {formatScrapeDate(SHOP_SCRAPE_DATE)}).
+          online shopova.
         </p>
         <div className="mt-4 flex flex-wrap gap-2">
           <span className="pill pill-blue">{budzet.length} modela ispod 400 KM</span>
@@ -249,7 +248,7 @@ function BudzetTelefoni() {
         <p className="mt-2 max-w-3xl text-[13px] leading-relaxed text-slate-400">
           Katalog sadrži modele koji se stvarno prodaju u Bosni i
           Hercegovini. Cijene se prikupljaju automatski iz BH online
-          prodavnica (snapshot {formatScrapeDate(SHOP_SCRAPE_DATE)}), a na
+          prodavnica, a na
           stranici svakog modela vidiš i tačan broj ponuda i prodavnicu s
           najnižom cijenom. Preporuke se zasnivaju na odnosu cijene i
           karakteristika — nikakve sponzorisane pozicije ne utiču na

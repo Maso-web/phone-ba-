@@ -1,8 +1,5 @@
 import type { Availability, PriceTrend } from "~/data/phones";
 import { trendArrow, trendDetailLabel, trendCardLabel } from "~/lib/catalog";
-import { OLX_SCRAPE_DATE } from "~/data/olx_prices";
-import { SHOP_SCRAPE_DATE } from "~/data/shop_prices";
-import { formatScrapeDate } from "~/lib/dates";
 
 /* ------------------------------------------------------------------ */
 /* Trend značka (kartica / detaljna stranica)                          */
@@ -109,12 +106,12 @@ export function DemoNote({ className = "" }: { className?: string }) {
         </strong>{" "}
         — nisu verificirane. Cijene s{" "}
         <strong className="font-semibold text-accent-400">OLX.ba</strong> su
-        stvarni poslovni oglasi (uvoz {formatScrapeDate(OLX_SCRAPE_DATE)}), a
+        stvarni poslovni oglasi, a
         cijene iz{" "}
         <strong className="font-semibold text-brand-300">
           BH online shopova
         </strong>{" "}
-        stvarni snapshot od {formatScrapeDate(SHOP_SCRAPE_DATE)} — provjeri
+        stvarni podaci — provjeri
         detalje na izvoru.
       </span>
     </p>

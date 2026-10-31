@@ -29,7 +29,7 @@ export function GadgetNote({ className = "" }: { className?: string }) {
       <span>
         Cijene u rubrici Gadžeti su{" "}
         <strong className="font-semibold text-brand-300">
-          stvarni snapshot iz BH online shopova
+          stvarni podaci iz BH online shopova
         </strong>{" "}
         (uvoz {formatScrapeDate(GADGET_SCRAPE_DATE)}, fonTELe, IQ Mobile,
         Univerzalno i Mobitech) — dostupnost provjeri kod prodavca. Ponude

@@ -27,7 +27,6 @@ import type { Gadget, GadgetSeller } from "./gadgets";
 type RawOperatorGadget = Omit<Gadget, "specs">;
 
 const BHT = "mojwebshop.bhtelecom.ba";
-const BHT_DATE = "19.9.2026.";
 
 /**
  * Dodatni prodavači (operatori) po slug-u POSTOJEĆEG gadžeta.
@@ -271,6 +270,6 @@ export const OPERATOR_GADGETS: RawOperatorGadget[] = [
 
 /** Izvor i datum snapshota operator ponuda (za napomenu u UI/izvještajima) */
 export const OPERATOR_PRICE_SOURCES = {
-  "BH Telecom": `${BHT} — pune cijene bez ugovora, snapshot ${BHT_DATE}`,
-  "HT Eronet": `hteronet.ba — dodatna oprema, snapshot ${BHT_DATE}`,
+  "BH Telecom": `${BHT} — pune cijene bez ugovora`,
+  "HT Eronet": `hteronet.ba — dodatna oprema`,
 } as const;

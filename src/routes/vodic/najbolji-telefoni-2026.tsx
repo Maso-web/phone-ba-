@@ -1,7 +1,6 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import { phones, type Phone } from "~/data/phones";
-import { SHOP_SCRAPE_DATE } from "~/data/shop_prices";
 import { effectiveMinOf, formatKM, hasRealPrice } from "~/lib/catalog";
 import { breadcrumbLd } from "~/lib/seo";
 import { PhoneCard } from "~/components/PhoneCard";
@@ -54,7 +53,7 @@ export const Route = createFileRoute("/vodic/najbolji-telefoni-2026")({
               name: "Odakle su cijene na phone.ba?",
               acceptedAnswer: {
                 "@type": "Answer",
-                text: "Cijene su stvarne ponude iz BH online prodavnica (Mobitech, fonTELe, Univerzalno, IQ Mobile, Digital City) i OLX.ba oglasa, prikupljene automatski. Datum posljednjeg unosa (snapshot-a) naveden je na svakoj stranici modela.",
+                text: "Cijene su stvarne ponude iz BH online prodavnica (Mobitech, fonTELe, Univerzalno, IQ Mobile, Digital City) i OLX.ba oglasa, prikupljene automatski. Na svakoj stranici modela vidiš tačan broj ponuda i prodavnicu s najnižom cijenom.",
               },
             },
             {
@@ -78,7 +77,7 @@ export const Route = createFileRoute("/vodic/najbolji-telefoni-2026")({
               name: "Da li su sklopivi (foldable) telefoni dostupni u BiH?",
               acceptedAnswer: {
                 "@type": "Answer",
-                text: "Da. Samsung Galaxy Z Fold 8 (od 3999 KM) i Z Flip 8 (od 2799 KM) već se prodaju u BH trgovinama (fonTELe, Mobitech), prema aktuelnom snapshot-u cijena.",
+                text: "Da. Samsung Galaxy Z Fold 8 (od 3999 KM) i Z Flip 8 (od 2799 KM) već se prodaju u BH trgovinama (fonTELe, Mobitech), prema podacima iz bh. trgovina.",
               },
             },
           ],
@@ -149,13 +148,12 @@ function NajboljiTelefoni2026() {
         <p className="mt-3 max-w-3xl text-[14.5px] leading-relaxed text-slate-400">
           Preporuke po kategorijama na osnovu našeg kataloga telefona koji se
           stvarno prodaju u BiH — sa stvarnim cijenama iz BH online shopova
-          (snapshot {formatScrapeDate(SHOP_SCRAPE_DATE)}). Bez plaćenih mjesta:
+          . Bez plaćenih mjesta:
           svaka preporuka se zasniva na odnosu cijene i karakteristika.
         </p>
         <div className="mt-4 flex flex-wrap gap-2">
           <span className="pill pill-blue">6 kategorija</span>
           <span className="pill pill-green">Stvarne cijene u KM</span>
-          <span className="pill pill-gray">Ažurirano {formatScrapeDate(SHOP_SCRAPE_DATE)}</span>
         </div>
       </div>
 
@@ -225,7 +223,7 @@ function NajboljiTelefoni2026() {
         <div className="mt-5 space-y-4">
           <Faq
             p="Odakle su cijene na phone.ba?"
-            o="Cijene su stvarne ponude iz BH online prodavnica (Mobitech, fonTELe, Univerzalno, IQ Mobile, Digital City) i OLX.ba oglasa, prikupljene automatski. Datum posljednjeg unosa (snapshot-a) naveden je na svakoj stranici modela."
+            o="Cijene su stvarne ponude iz BH online prodavnica (Mobitech, fonTELe, Univerzalno, IQ Mobile, Digital City) i OLX.ba oglasa, prikupljene automatski. Na svakoj stranici modela vidiš tačan broj ponuda i prodavnicu s najnižom cijenom."
           />
           <Faq
             p="Koji budžetski telefon ima najbolju bateriju?"
@@ -237,7 +235,7 @@ function NajboljiTelefoni2026() {
           />
           <Faq
             p="Da li su sklopivi (foldable) telefoni dostupni u BiH?"
-            o="Da. Samsung Galaxy Z Fold 8 (od 3999 KM) i Z Flip 8 (od 2799 KM) već se prodaju u BH trgovinama (fonTELe, Mobitech), prema aktuelnom snapshot-u cijena."
+            o="Da. Samsung Galaxy Z Fold 8 (od 3999 KM) i Z Flip 8 (od 2799 KM) već se prodaju u BH trgovinama (fonTELe, Mobitech), prema podacima iz bh. trgovina."
           />
         </div>
       </section>

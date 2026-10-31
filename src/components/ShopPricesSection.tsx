@@ -1,15 +1,13 @@
 import {
-  SHOP_SCRAPE_DATE,
   type PhoneShopPrices,
   type ShopOffer,
 } from "~/data/shop_prices";
 import { formatKM } from "~/lib/catalog";
-import { formatScrapeDate } from "~/lib/dates";
 import { track } from "~/lib/analytics";
 
 /**
  * "Cijene u online shopovima — stvarne cijene u BiH": sekcija sa stvarnim
- * cijenama iz 5 BH web-prodavnica (snapshot SHOP_SCRAPE_DATE). Cijene su
+ * cijenama iz 5 BH web-prodavnica. Cijene su
  * realne — ne demo. Prikazuje se na stranici telefona kad model ima pogotke.
  */
 
@@ -48,7 +46,6 @@ export function ShopPricesSection({ data }: { data: PhoneShopPrices }) {
           Cijene u online shopovima — stvarne cijene u BiH
         </h2>
         <p className="text-[11.5px] text-slate-500">
-          uvoz {formatScrapeDate(SHOP_SCRAPE_DATE)}
         </p>
       </div>
 
@@ -148,7 +145,7 @@ export function ShopPricesSection({ data }: { data: PhoneShopPrices }) {
       </ul>
 
       <p className="mt-3 text-[11.5px] text-slate-500">
-        Snapshot {formatScrapeDate(SHOP_SCRAPE_DATE)} · prodavnice:{" "}
+        Prodavnice:{" "}
         {data.sources.join(", ")}
       </p>
     </section>
