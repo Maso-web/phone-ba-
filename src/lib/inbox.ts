@@ -175,10 +175,20 @@ export async function listInbound(limit = 50): Promise<
 > {
   await ensureInboxSchema();
   const db = sql();
+  // „Primljeno" sadrži SAMO stvarno primljenu poštu. Automatske kopije naših
+  // vlastitih poslanih poruka (arhivske kopije poslane na hello@phone.ba sa
+  // predmetom „[POSLANO] …" ili tekstom „ARHIVA POSLANOG") se ne prikazuju.
   const rows = await db`
     select id, from_addr, subject, received_at, replied,
            left(coalesce(body_text, ''), 180) as preview
       from inbound_email
+     where not (
+       lower(from_addr) = 'hello@phone.ba'
+       and (
+         subject like '[POSLANO]%'
+         or coalesce(body_text, '') like 'ARHIVA POSLANOG%'
+       )
+     )
      order by received_at desc
      limit ${limit}`;
   return rows as never;
