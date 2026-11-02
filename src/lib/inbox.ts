@@ -718,3 +718,74 @@ export async function listOutbound(limit = 50): Promise<OutboundRow[]> {
      order by sent_at desc
      limit ${limit}`) as never;
 }
+
+/* ------------------------------------------------------------------ *
+ * Detalj poslane poruke + status dostave (vlasnikov uvid u poštu)
+ * ------------------------------------------------------------------ */
+export type OutboundDetail = {
+  id: string;
+  to_addr: string;
+  subject: string;
+  sent_at: string;
+  attachment_count: number;
+  body_text: string | null;
+  status: string | null;
+};
+
+export async function getOutbound(id: string): Promise<OutboundDetail | null> {
+  await ensureInboxSchema();
+  const db = sql();
+  const rows = (await db`
+    select id, to_addr, subject, sent_at, attachment_count, body_text
+      from outbound_email
+     where id = ${id}
+     limit 1`) as unknown as Array<{
+    id: string;
+    to_addr: string;
+    subject: string;
+    sent_at: string;
+    attachment_count: number;
+    body_text: string | null;
+  }>;
+  const row = rows[0];
+  if (!row) return null;
+  let status: string | null = null;
+  try {
+    const res = await fetch(`${RESEND_BASE}/emails/${encodeURIComponent(id)}`, {
+      headers: { Authorization: `Bearer ${resendKey()}` },
+    });
+    if (res.ok) {
+      const data = (await res.json()) as { last_event?: string };
+      status = typeof data.last_event === "string" ? data.last_event : null;
+    }
+  } catch {
+    status = null;
+  }
+  return { ...row, status };
+}
+
+/** Status dostave za više poruka odjednom (najviše 25, serijski po 4). */
+export async function outboundStatuses(
+  ids: string[],
+): Promise<Record<string, string>> {
+  const out: Record<string, string> = {};
+  const queue = ids.slice(0, 25);
+  const workers = Array.from({ length: Math.min(4, queue.length) }, async () => {
+    for (;;) {
+      const id = queue.shift();
+      if (!id) return;
+      try {
+        const res = await fetch(`${RESEND_BASE}/emails/${encodeURIComponent(id)}`, {
+          headers: { Authorization: `Bearer ${resendKey()}` },
+        });
+        if (!res.ok) continue;
+        const data = (await res.json()) as { last_event?: string };
+        if (typeof data.last_event === "string") out[id] = data.last_event;
+      } catch {
+        /* tiho — status ostaje nepoznat */
+      }
+    }
+  });
+  await Promise.all(workers);
+  return out;
+}

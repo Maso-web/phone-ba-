@@ -48,6 +48,42 @@ type OutboundRow = {
   sent_at: string;
   attachment_count: number;
 };
+type OutboundDetail = {
+  id: string;
+  to_addr: string;
+  subject: string;
+  sent_at: string;
+  attachment_count: number;
+  body_text: string | null;
+  status: string | null;
+};
+const STATUS_LABEL: Record<string, string> = {
+  delivered: "isporučeno",
+  sent: "poslano",
+  bounced: "odbijeno",
+  complained: "žalba",
+  opened: "otvoreno",
+  clicked: "kliknuto",
+  delivery_delayed: "kasni",
+};
+function statusLabel(code: string | null | undefined): string {
+  if (!code) return "—";
+  return STATUS_LABEL[code] ?? code;
+}
+function csvEscape(value: string): string {
+  const v = value ?? "";
+  return /[";\n]/.test(v) ? `"${v.replace(/"/g, '""')}"` : v;
+}
+function downloadCsv(filename: string, rows: string[][]) {
+  const csv = rows.map((r) => r.map(csvEscape).join(";")).join("\r\n");
+  const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
+}
 type TemplateItem = { id: string; name: string; description: string };
 type PickedFile = {
   filename: string;
@@ -131,6 +167,12 @@ function InboxPage() {
   const [tab, setTab] = useState<"in" | "out">("in");
   const [messages, setMessages] = useState<MessageListItem[]>([]);
   const [sent, setSent] = useState<OutboundRow[]>([]);
+  const [searchIn, setSearchIn] = useState("");
+  const [searchOut, setSearchOut] = useState("");
+  const [addrFilter, setAddrFilter] = useState("");
+  const [sentOpen, setSentOpen] = useState<OutboundDetail | null>(null);
+  const [sentBusy, setSentBusy] = useState(false);
+  const [statuses, setStatuses] = useState<Record<string, string>>({});
   const [open, setOpen] = useState<MessageFull | null>(null);
   const [openAtts, setOpenAtts] = useState<AttachmentRow[]>([]);
   const [templates, setTemplates] = useState<TemplateItem[]>([]);
@@ -172,9 +214,70 @@ function InboxPage() {
     if (!authed) return;
     const { status, data } = await api("/api/inbox/sent");
     if (status === 200 && data.ok) {
-      setSent((data.messages as OutboundRow[]) ?? []);
+      const rows = (data.messages as OutboundRow[]) ?? [];
+      setSent(rows);
+      const ids = rows.slice(0, 20).map((r) => r.id);
+      if (ids.length > 0) {
+        const res = await api(
+          `/api/inbox/sent-status?ids=${encodeURIComponent(ids.join(","))}`,
+        );
+        if (res.status === 200 && res.data.ok) {
+          setStatuses((res.data.statuses as Record<string, string>) ?? {});
+        }
+      }
     }
   }, [authed]);
+  const openSent = useCallback(async (id: string) => {
+    setSentBusy(true);
+    setSentOpen(null);
+    const { status, data } = await api(
+      `/api/inbox/sent?id=${encodeURIComponent(id)}`,
+    );
+    setSentBusy(false);
+    if (status === 200 && data.ok) {
+      const msg = data.message as OutboundDetail;
+      setSentOpen(msg);
+      if (msg.status) {
+        setStatuses((prev) => ({ ...prev, [msg.id]: msg.status as string }));
+      }
+    } else {
+      setError(
+        typeof data.error === "string" ? data.error : "Čitanje nije uspjelo.",
+      );
+    }
+  }, []);
+  const filteredSent = sent.filter((m) => {
+    if (addrFilter && (m.to_addr || "").toLowerCase() !== addrFilter) return false;
+    const q = searchOut.trim().toLowerCase();
+    if (!q) return true;
+    return (
+      (m.to_addr || "").toLowerCase().includes(q) ||
+      (m.subject || "").toLowerCase().includes(q)
+    );
+  });
+  const addrSummary = (() => {
+    const map = new Map<string, { count: number; last: string }>();
+    for (const m of sent) {
+      const key = (m.to_addr || "").toLowerCase();
+      const prev = map.get(key);
+      map.set(key, {
+        count: (prev?.count ?? 0) + 1,
+        last: prev && prev.last > m.sent_at ? prev.last : m.sent_at,
+      });
+    }
+    return Array.from(map.entries())
+      .sort((a, b) => b[1].count - a[1].count)
+      .map(([addr, v]) => ({ addr, count: v.count, last: v.last }));
+  })();
+  const filteredMessages = messages.filter((m) => {
+    const q = searchIn.trim().toLowerCase();
+    if (!q) return true;
+    return (
+      (m.from_addr || "").toLowerCase().includes(q) ||
+      (m.subject || "").toLowerCase().includes(q) ||
+      (m.preview || "").toLowerCase().includes(q)
+    );
+  });
   const loadTemplates = useCallback(async () => {
     if (!authed) return;
     const { status, data } = await api("/api/inbox/templates");
@@ -640,46 +743,179 @@ function InboxPage() {
       </div>
 
       {tab === "out" ? (
-        <section className="surface-card overflow-hidden">
-          {sent.length === 0 ? (
-            <p className="px-4 py-12 text-center text-sm text-slate-400">
-              Još nema poslanih poruka.
-            </p>
-          ) : (
-            <ul className="divide-y divide-white/5">
-              {sent.map((m) => (
-                <li key={m.id} className="px-4 py-3">
-                  <div className="flex flex-wrap items-center justify-between gap-2">
-                    <span className="text-sm font-semibold text-white">
-                      {m.subject || "(bez predmeta)"}
-                    </span>
-                    <span className="text-xs text-slate-500">
-                      {formatTime(m.sent_at)}
-                    </span>
-                  </div>
-                  <p className="mt-0.5 text-xs text-slate-400">
-                    → {m.to_addr}
-                    {m.attachment_count > 0 ? (
-                      <span className="ml-2 text-slate-500">
-                        📎 {m.attachment_count}
-                      </span>
-                    ) : null}
-                  </p>
-                </li>
+        <section className="space-y-4">
+          <div className="flex flex-wrap items-center gap-2">
+            <input
+              value={searchOut}
+              onChange={(e) => setSearchOut(e.target.value)}
+              placeholder="Traži po adresi ili predmetu…"
+              className="min-w-0 flex-1 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white outline-none placeholder:text-slate-500 focus:border-white/25"
+            />
+            <button
+              type="button"
+              className="chip"
+              onClick={() =>
+                downloadCsv("phoneba-poslano.csv", [
+                  ["Datum", "Smjer", "Adresa", "Predmet", "Prilozi", "Status"],
+                  ...sent.map((m) => [
+                    (m.sent_at || "").replace("T", " ").slice(0, 16),
+                    "poslano",
+                    m.to_addr,
+                    m.subject,
+                    String(m.attachment_count),
+                    statusLabel(statuses[m.id]),
+                  ]),
+                ])
+              }
+            >
+              ⬇ Preuzmi CSV
+            </button>
+            {addrFilter ? (
+              <button
+                type="button"
+                className="chip"
+                onClick={() => setAddrFilter("")}
+              >
+                ✕ {addrFilter}
+              </button>
+            ) : null}
+          </div>
+          {addrSummary.length > 0 ? (
+            <div className="flex flex-wrap gap-2">
+              {addrSummary.slice(0, 12).map((a) => (
+                <button
+                  key={a.addr}
+                  type="button"
+                  className={`chip text-xs ${
+                    addrFilter === a.addr ? "" : "opacity-60"
+                  }`}
+                  onClick={() =>
+                    setAddrFilter(addrFilter === a.addr ? "" : a.addr)
+                  }
+                  title={`Zadnje slanje: ${formatTime(a.last)}`}
+                >
+                  {a.addr} · {a.count}×
+                </button>
               ))}
-            </ul>
-          )}
-        </section>
-      ) : (
-        <div className="grid gap-5 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
-          <section className="surface-card overflow-hidden">
-            {messages.length === 0 ? (
+            </div>
+          ) : null}
+          {sentBusy ? (
+            <p className="text-xs text-slate-400">Učitavam poruku…</p>
+          ) : null}
+          {sentOpen ? (
+            <div className="surface-card p-4">
+              <div className="flex flex-wrap items-start justify-between gap-2">
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-bold text-white">
+                    {sentOpen.to_addr}
+                  </p>
+                  <p className="mt-0.5 text-xs text-slate-400">
+                    {formatTime(sentOpen.sent_at)} ·{" "}
+                    {statusLabel(sentOpen.status ?? statuses[sentOpen.id])}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  className="chip text-xs"
+                  onClick={() => setSentOpen(null)}
+                >
+                  ✕ Zatvori
+                </button>
+              </div>
+              <p className="mt-3 text-sm font-semibold text-white">
+                {sentOpen.subject || "(bez predmeta)"}
+              </p>
+              <pre className="mt-2 max-h-72 overflow-auto whitespace-pre-wrap break-words rounded-lg bg-black/20 p-3 text-xs leading-relaxed text-slate-200">
+                {sentOpen.body_text || "(tekst poruke nije sačuvan)"}
+              </pre>
+              <p className="mt-2 text-xs text-slate-400">
+                📎 Prilozi: {sentOpen.attachment_count}
+                {sentOpen.attachment_count > 0
+                  ? " (arhiva bilježi broj priloga; fajlovi se ne čuvaju u arhivi)"
+                  : ""}
+              </p>
+            </div>
+          ) : null}
+          <div className="surface-card overflow-hidden">
+            {filteredSent.length === 0 ? (
               <p className="px-4 py-12 text-center text-sm text-slate-400">
-                Nema poruka. Pišite na hello@phone.ba.
+                Nema poslanih poruka za ovaj filter.
               </p>
             ) : (
               <ul className="divide-y divide-white/5">
-                {messages.map((m) => (
+                {filteredSent.map((m) => (
+                  <li key={m.id}>
+                    <button
+                      type="button"
+                      className="w-full px-4 py-3 text-left hover:bg-white/5"
+                      onClick={() => void openSent(m.id)}
+                    >
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <span className="text-sm font-bold text-white">
+                          {m.to_addr}
+                        </span>
+                        <span className="text-xs text-slate-500">
+                          {formatTime(m.sent_at)}
+                        </span>
+                      </div>
+                      <div className="mt-0.5 flex flex-wrap items-center gap-2">
+                        <span className="truncate text-sm text-slate-300">
+                          {m.subject || "(bez predmeta)"}
+                        </span>
+                        {m.attachment_count > 0 ? (
+                          <span className="text-xs text-slate-500">
+                            📎 {m.attachment_count}
+                          </span>
+                        ) : null}
+                        <span className="text-xs text-emerald-300/80">
+                          {statusLabel(statuses[m.id])}
+                        </span>
+                      </div>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </section>
+      ) : (
+        <div className="space-y-4">
+        <div className="flex flex-wrap items-center gap-2">
+          <input
+            value={searchIn}
+            onChange={(e) => setSearchIn(e.target.value)}
+            placeholder="Traži po pošiljaocu, predmetu ili tekstu…"
+            className="min-w-0 flex-1 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white outline-none placeholder:text-slate-500 focus:border-white/25"
+          />
+          <button
+            type="button"
+            className="chip"
+            onClick={() =>
+              downloadCsv("phoneba-pristiglo.csv", [
+                ["Datum", "Smjer", "Adresa", "Predmet", "Prilozi", "Status"],
+                ...messages.map((m) => [
+                  (m.received_at || "").replace("T", " ").slice(0, 16),
+                  "primljeno",
+                  m.from_addr,
+                  m.subject,
+                  "—",
+                  m.replied ? "odgovoreno" : "",
+                ]),
+              ])
+            }
+          >
+            ⬇ Preuzmi CSV
+          </button>
+        </div>
+        <div className="grid gap-5 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
+          <section className="surface-card overflow-hidden">
+            {filteredMessages.length === 0 ? (
+              <p className="px-4 py-12 text-center text-sm text-slate-400">
+                Nema poruka za ovaj filter.
+              </p>
+            ) : (
+              <ul className="divide-y divide-white/5">
+                {filteredMessages.map((m) => (
                   <li key={m.id}>
                     <button
                       type="button"
@@ -859,6 +1095,7 @@ function InboxPage() {
               </div>
             )}
           </section>
+        </div>
         </div>
       )}
     </main>
