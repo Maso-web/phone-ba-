@@ -787,14 +787,6 @@ function InboxPage() {
         >
           Poslano ({sent.length})
         </button>
-        <button
-          type="button"
-          className="chip ml-auto text-xs"
-          title="Obriši sve poruke iz aktivnog taba"
-          onClick={() => void removeAll(tab)}
-        >
-          🗑 Obriši sve
-        </button>
       </div>
 
       {tab === "out" ? (
@@ -824,6 +816,14 @@ function InboxPage() {
               }
             >
               ⬇ Preuzmi CSV
+            </button>
+            <button
+              type="button"
+              className="chip"
+              title="Briše samo POSLANE poruke"
+              onClick={() => void removeAll("out")}
+            >
+              🗑 Obriši sve poslano
             </button>
             {addrFilter ? (
               <button
@@ -968,6 +968,14 @@ function InboxPage() {
             }
           >
             ⬇ Preuzmi CSV
+          </button>
+          <button
+            type="button"
+            className="chip"
+            title="Briše samo PRIMLJENE poruke"
+            onClick={() => void removeAll("in")}
+          >
+            🗑 Obriši sve primljeno
           </button>
         </div>
         <div className="grid gap-5 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
