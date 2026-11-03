@@ -117,6 +117,9 @@ export function ensureInboxSchema(): Promise<void> {
       await db`
         create index if not exists outbound_email_sent_at_idx
           on outbound_email (sent_at desc)`;
+      // Brisanje (skrivanje) poruka iz sandučeta.
+      await db`alter table inbound_email add column if not exists deleted_at timestamptz`;
+      await db`alter table outbound_email add column if not exists deleted_at timestamptz`;
       await db`
         create table if not exists mail_template (
           id text primary key,
@@ -182,7 +185,8 @@ export async function listInbound(limit = 50): Promise<
     select id, from_addr, subject, received_at, replied,
            left(coalesce(body_text, ''), 180) as preview
       from inbound_email
-     where not (
+     where deleted_at is null
+       and not (
        lower(from_addr) = 'hello@phone.ba'
        and (
          subject like '[POSLANO]%'
@@ -725,8 +729,37 @@ export async function listOutbound(limit = 50): Promise<OutboundRow[]> {
   return (await db`
     select id, to_addr, subject, sent_at, attachment_count
       from outbound_email
+     where deleted_at is null
      order by sent_at desc
      limit ${limit}`) as never;
+}
+
+/* ------------------------------------------------------------------ *
+ * Brisanje poruka iz sandučeta (soft delete — skriva iz liste)
+ * ------------------------------------------------------------------ */
+
+export async function deleteInbound(id: string): Promise<void> {
+  await ensureInboxSchema();
+  const db = sql();
+  await db`update inbound_email set deleted_at = now() where id = ${id}`;
+}
+
+export async function deleteOutbound(id: string): Promise<void> {
+  await ensureInboxSchema();
+  const db = sql();
+  await db`update outbound_email set deleted_at = now() where id = ${id}`;
+}
+
+export async function clearInbound(): Promise<void> {
+  await ensureInboxSchema();
+  const db = sql();
+  await db`update inbound_email set deleted_at = now() where deleted_at is null`;
+}
+
+export async function clearOutbound(): Promise<void> {
+  await ensureInboxSchema();
+  const db = sql();
+  await db`update outbound_email set deleted_at = now() where deleted_at is null`;
 }
 
 /* ------------------------------------------------------------------ *

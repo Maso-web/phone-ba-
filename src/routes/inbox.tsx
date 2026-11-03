@@ -278,6 +278,53 @@ function InboxPage() {
       (m.preview || "").toLowerCase().includes(q)
     );
   });
+  const removeOne = useCallback(
+    async (box: "in" | "out", id: string) => {
+      if (!window.confirm("Obrisati ovu poruku iz sandučeta?")) return;
+      const { status } = await api("/api/inbox/delete", {
+        method: "POST",
+        body: JSON.stringify({ box, id }),
+      });
+      if (status !== 200) {
+        setError("Brisanje nije uspjelo.");
+        return;
+      }
+      if (box === "out") {
+        setSentOpen(null);
+        await loadSent();
+      } else {
+        setOpen(null);
+        await loadList();
+      }
+    },
+    [loadList, loadSent],
+  );
+  const removeAll = useCallback(
+    async (box: "in" | "out") => {
+      const q =
+        box === "out"
+          ? "Obrisati SVE poslane poruke iz liste?"
+          : "Obrisati SVE primljene poruke iz liste?";
+      if (!window.confirm(q)) return;
+      const { status } = await api("/api/inbox/delete", {
+        method: "POST",
+        body: JSON.stringify({ box, all: true }),
+      });
+      if (status !== 200) {
+        setError("Brisanje nije uspjelo.");
+        return;
+      }
+      if (box === "out") {
+        setSentOpen(null);
+        await loadSent();
+      } else {
+        setOpen(null);
+        await loadList();
+      }
+    },
+    [loadList, loadSent],
+  );
+
   const loadTemplates = useCallback(async () => {
     if (!authed) return;
     const { status, data } = await api("/api/inbox/templates");
@@ -740,6 +787,14 @@ function InboxPage() {
         >
           Poslano ({sent.length})
         </button>
+        <button
+          type="button"
+          className="chip ml-auto text-xs"
+          title="Obriši sve poruke iz aktivnog taba"
+          onClick={() => void removeAll(tab)}
+        >
+          🗑 Obriši sve
+        </button>
       </div>
 
       {tab === "out" ? (
@@ -844,10 +899,10 @@ function InboxPage() {
             ) : (
               <ul className="divide-y divide-white/5">
                 {filteredSent.map((m) => (
-                  <li key={m.id}>
+                  <li key={m.id} className="flex items-start">
                     <button
                       type="button"
-                      className="w-full px-4 py-3 text-left hover:bg-white/5"
+                      className="min-w-0 flex-1 px-4 py-3 text-left hover:bg-white/5"
                       onClick={() => void openSent(m.id)}
                     >
                       <div className="flex flex-wrap items-center justify-between gap-2">
@@ -871,6 +926,14 @@ function InboxPage() {
                           {statusLabel(statuses[m.id])}
                         </span>
                       </div>
+                    </button>
+                    <button
+                      type="button"
+                      className="chip m-2 shrink-0 text-xs"
+                      title="Obriši poruku"
+                      onClick={() => void removeOne("out", m.id)}
+                    >
+                      🗑
                     </button>
                   </li>
                 ))}
@@ -916,10 +979,10 @@ function InboxPage() {
             ) : (
               <ul className="divide-y divide-white/5">
                 {filteredMessages.map((m) => (
-                  <li key={m.id}>
+                  <li key={m.id} className="flex items-start">
                     <button
                       type="button"
-                      className="w-full px-4 py-3 text-left hover:bg-white/5"
+                      className="min-w-0 flex-1 px-4 py-3 text-left hover:bg-white/5"
                       onClick={() => void openMessage(m.id)}
                     >
                       <div className="flex items-center justify-between gap-2">
@@ -943,6 +1006,14 @@ function InboxPage() {
                       <p className="mt-1 line-clamp-2 text-xs text-slate-500">
                         {m.preview}
                       </p>
+                    </button>
+                    <button
+                      type="button"
+                      className="chip m-2 shrink-0 text-xs"
+                      title="Obriši poruku"
+                      onClick={() => void removeOne("in", m.id)}
+                    >
+                      🗑
                     </button>
                   </li>
                 ))}
