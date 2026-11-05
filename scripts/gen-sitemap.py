@@ -90,6 +90,15 @@ def main() -> None:
         lastmod(["src/routes/vodic/budzet-telefoni.tsx", "src/data/shop_prices.ts"]),
         "weekly", "0.7",
     ))
+    urls.append((
+        f"{SITE}/vodic/cijene-telefona",
+        lastmod([
+            "src/routes/vodic/cijene-telefona.tsx",
+            "src/data/shop_prices.ts",
+            "src/data/olx_prices.ts",
+        ]),
+        "monthly", "0.8",
+    ))
 
     lm_telefon = lastmod(fajlovi_stranice["telefon"])
     for s in telefoni:

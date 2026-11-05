@@ -1,7 +1,9 @@
 import { Link, createFileRoute, notFound } from "@tanstack/react-router";
 import { phones, type Seller } from "~/data/phones";
 import {
+  effectiveMinOf,
   formatKM,
+  hasRealPrice,
   minPriceOf,
   sortedSellers,
   trendArrow,
@@ -23,6 +25,34 @@ import {
   phoneDescription,
   phoneTitle,
 } from "~/lib/seo";
+
+/**
+ * Product JSON-LD — samo za modele koji imaju STVARNU cijenu (OLX/shop).
+ * Demo cijene se namjerno NE šalju Googleu.
+ */
+function productLd(phone: (typeof phones)[number]) {
+  const url = `https://phone.ba/telefon/${phone.slug}`;
+  const low = effectiveMinOf(phone);
+  return {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: phone.name,
+    sku: phone.slug,
+    brand: { "@type": "Brand", name: phone.brand },
+    description: `${phone.name}: ${phone.tagline} Najniža pronađena cijena u BiH ${formatKM(low)}.`,
+    image: phone.image
+      ? `https://phone.ba${phone.image}`
+      : "https://phone.ba/og-image.jpg",
+    offers: {
+      "@type": "AggregateOffer",
+      priceCurrency: "BAM",
+      lowPrice: low,
+      offerCount: 1,
+      availability: "https://schema.org/InStock",
+      url,
+    },
+  };
+}
 
 export const Route = createFileRoute("/telefon/$slug")({
   head: ({ params }) => {
@@ -52,6 +82,14 @@ export const Route = createFileRoute("/telefon/$slug")({
                 ]),
               ),
             },
+            ...(hasRealPrice(phone)
+              ? [
+                  {
+                    type: "application/ld+json",
+                    children: JSON.stringify(productLd(phone)),
+                  },
+                ]
+              : []),
           ]
         : [],
     };

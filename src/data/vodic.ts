@@ -10,7 +10,9 @@
 
 /** Dozvoljene putanje vodiča (tipski vezane za rute, da Link ostane tipiziran). */
 export type VodicPath =
-  "/vodic/najbolji-telefoni-2026" | "/vodic/budzet-telefoni";
+  | "/vodic/najbolji-telefoni-2026"
+  | "/vodic/budzet-telefoni"
+  | "/vodic/cijene-telefona";
 
 export interface Vodic {
   slug: string;
@@ -24,6 +26,13 @@ export interface Vodic {
 }
 
 export const vodici: Vodic[] = [
+  {
+    slug: "cijene-telefona",
+    path: "/vodic/cijene-telefona",
+    naslov: "Cijene telefona u BiH — mjesečni izvještaj",
+    tema: "Kretanje cijena",
+    opis: "Mjesečni pregled stvarnih cijena iz kataloga: najniža, prosječna i najviša cijena, najjeftiniji modeli, cijene po brendu i broj modela po cjenovnim razredima.",
+  },
   {
     slug: "najbolji-telefoni-2026",
     path: "/vodic/najbolji-telefoni-2026",
