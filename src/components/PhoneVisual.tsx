@@ -128,6 +128,9 @@ export function PhoneVisual({
         <img
           src={image}
           alt={name ?? `${brand} telefon`}
+          width={w}
+          height={w}
+          decoding="async"
           loading={size === "lg" ? "eager" : "lazy"}
           className="h-full w-full rounded-[16%] object-cover shadow-[0_14px_42px_-14px_rgba(0,0,0,0.55),inset_0_1px_0_rgba(255,255,255,0.08)] ring-1 ring-white/[0.07]"
         />
