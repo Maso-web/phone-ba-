@@ -1,9 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 import {
+  EMAIL_RE,
   fetchReceivedEmail,
   insertInbound,
   json,
   missingInboundEnv,
+  sendViaResend,
   storeInboundAttachments,
   verifyResendWebhook,
   type ReceivedAttachment,
@@ -124,6 +126,31 @@ export const Route = createFileRoute("/api/inbound")({
           console.log(
             `[inbound] ${inserted ? "stored" : "duplicate"} message (text=${text !== null} html=${html !== null} atts=${attachmentCount})`,
           );
+
+          // Automatska kopija vlasniku (OWNER_FORWARD_TO) — samo za nove poruke,
+          // da ponovljeni webhook ne pošalje duplikat.
+          const forwardTo = (
+            process.env.OWNER_FORWARD_TO ?? "kuldijamahmut75@gmail.com"
+          ).trim();
+          if (inserted && forwardTo && EMAIL_RE.test(forwardTo)) {
+            try {
+              await sendViaResend({
+                to: forwardTo,
+                subject: `[phone.ba] ${subject !== "" ? subject : "(bez predmeta)"}`,
+                text:
+                  `Od: ${from}\nZa: ${to}\n\n` +
+                  (text ?? "(poruka nema tekstualni dio — otvori je u sandučetu)"),
+                html: html ?? undefined,
+              });
+              console.log("[inbound] forwarded to owner");
+            } catch (err) {
+              console.error(
+                "[inbound] forward failed:",
+                err instanceof Error ? err.message.slice(0, 200) : "unknown",
+              );
+            }
+          }
+
           return json({ ok: true, stored: inserted }, 200);
         } catch (err) {
           // Bez tijela u logu — samo tip greške.
